@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/corner"
+        android:layout_width="@dimen/corner_width"
+        android:layout_height="@dimen/corner_height"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/full_margin"
+        android:textSize="@dimen/extra_large_font"
+        android:textColor="@color/light_blue"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/top_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/label"
+        android:layout_marginBottom="@dimen/full_margin"
+        android:textSize="@dimen/large_font"/>
+
+    <TextView
+        android:id="@+id/bottom_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/label"
+        android:layout_below="@id/top_line"
+        android:layout_marginTop="@dimen/half_margin"
+        android:textSize="@dimen/small_font"
+        android:textColor="@color/tomato"/>
+
+</RelativeLayout>

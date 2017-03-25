@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.gradians.evident"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    supportLibVersion = '23.0.1'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile("com.android.support:appcompat-v7:${supportLibVersion}") { force = true }
+    compile("com.android.support:design:${supportLibVersion}") { force = true }
+    compile project(':renderer-android') // for android API 7 and up
+    compile project(':renderer-share') // for android API 7 and up
+    compile 'com.koushikdutta.ion:ion:2.+'
+}

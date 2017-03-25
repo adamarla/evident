@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- Wrap front_svg and back_svg within a RelativeLayout. Then, center the parent.
+Reference: http://stackoverflow.com/questions/5165799/replace-a-view-with-other-view-by-code -->
+
+    <com.himamis.retex.renderer.android.LaTeXView
+        android:id="@+id/front"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+
+    <com.himamis.retex.renderer.android.LaTeXView
+        android:id="@+id/rear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>
