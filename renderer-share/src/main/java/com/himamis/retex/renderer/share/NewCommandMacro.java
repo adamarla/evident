@@ -46,11 +46,12 @@
 package com.himamis.retex.renderer.share;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
 import com.himamis.retex.renderer.share.exception.ParseException;
 import com.himamis.retex.renderer.share.regex.RegexUtil;
 
-public class NewCommandMacro implements Macro {
+public class NewCommandMacro {
 
 	protected static HashMap<String, String> macrocode = new HashMap<String, String>();
 	protected static HashMap<String, String> macroreplacement = new HashMap<String, String>();
@@ -59,11 +60,10 @@ public class NewCommandMacro implements Macro {
 	}
 
 	public static void addNewCommand(String name, String code, int nbargs) throws ParseException {
-		// if (macrocode.get(name) != null)
-		// throw new ParseException("Command " + name +
-		// " already exists ! Use renewcommand instead ...");
+		//if (macrocode.get(name) != null)
+		//throw new ParseException("Command " + name + " already exists ! Use renewcommand instead ...");
 		macrocode.put(name, code);
-		MacroInfo.Commands.put(name, new MacroInfo(new NewCommandMacro(), nbargs));
+		MacroInfo.Commands.put(name, new MacroInfo("com.himamis.retex.renderer.share.NewCommandMacro", "executeMacro", nbargs));
 	}
 
 	public static void addNewCommand(String name, String code, int nbargs, String def) throws ParseException {
@@ -71,7 +71,7 @@ public class NewCommandMacro implements Macro {
 			throw new ParseException("Command " + name + " already exists ! Use renewcommand instead ...");
 		macrocode.put(name, code);
 		macroreplacement.put(name, def);
-		MacroInfo.Commands.put(name, new MacroInfo(new NewCommandMacro(), nbargs, 1));
+		MacroInfo.Commands.put(name, new MacroInfo("com.himamis.retex.renderer.share.NewCommandMacro", "executeMacro", nbargs, 1));
 	}
 
 	public static boolean isMacro(String name) {
@@ -82,7 +82,7 @@ public class NewCommandMacro implements Macro {
 		if (macrocode.get(name) == null)
 			throw new ParseException("Command " + name + " is not defined ! Use newcommand instead ...");
 		macrocode.put(name, code);
-		MacroInfo.Commands.put(name, new MacroInfo(new NewCommandMacro(), nbargs));
+		MacroInfo.Commands.put(name, new MacroInfo("com.himamis.retex.renderer.share.NewCommandMacro", "executeMacro", nbargs));
 	}
 
 	public String executeMacro(TeXParser tp, String[] args) {
@@ -91,18 +91,19 @@ public class NewCommandMacro implements Macro {
 		int nbargs = args.length - 11;
 		int dec = 0;
 
+
 		if (args[nbargs + 1] != null) {
 			dec = 1;
-			rep = RegexUtil.quoteReplacement(args[nbargs + 1]);
+			rep = Matcher.quoteReplacement(args[nbargs + 1]);
 			code = code.replaceAll("#1", rep);
 		} else if (macroreplacement.get(args[0]) != null) {
 			dec = 1;
-			rep = RegexUtil.quoteReplacement(macroreplacement.get(args[0]));
+			rep = Matcher.quoteReplacement(macroreplacement.get(args[0]));
 			code = code.replaceAll("#1", rep);
 		}
 
 		for (int i = 1; i <= nbargs; i++) {
-			rep = RegexUtil.quoteReplacement(args[i]);
+			rep = Matcher.quoteReplacement(args[i]);
 			code = code.replaceAll("#" + (i + dec), rep);
 		}
 

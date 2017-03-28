@@ -150,10 +150,9 @@ public class TeXFormulaParser {
 			Object[] argValues = getArgumentValues(args);
 			// create TeXFormula object
 			try {
-				throw new UnsupportedOperationException("Not implemented");
-				//MacroInfo f = MacroInfo.class.getConstructor(argClasses).newInstance(argValues);
-				// succesfully created, so add to "temporary formula's"-hashtable
-				//tempCommands.put(name, f);
+				MacroInfo f = MacroInfo.class.getConstructor(argClasses).newInstance(argValues);
+				// successfully created, so add to "temporary formula's"-hashtable
+				tempCommands.put(name, f);
 			} catch (IllegalArgumentException e) {
 				String err = "IllegalArgumentException:\n";
 				err += "ClassLoader to load this class (TeXFormulaParser): " + this.getClass() + "\n";

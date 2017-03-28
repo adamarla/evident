@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.himamis.retex.renderer.android.graphics.ColorA;
@@ -17,6 +18,10 @@ import com.himamis.retex.renderer.share.platform.FactoryProvider;
 import com.himamis.retex.renderer.share.platform.graphics.Color;
 import com.himamis.retex.renderer.share.platform.graphics.Insets;
 
+import static com.himamis.retex.renderer.share.TeXConstants.ALIGN_LEFT;
+import static com.himamis.retex.renderer.share.TeXConstants.STYLE_DISPLAY;
+import static com.himamis.retex.renderer.share.TeXConstants.UNIT_PIXEL;
+
 public class LaTeXView extends View {
 
     private TeXFormula mFormula;
@@ -27,7 +32,7 @@ public class LaTeXView extends View {
 
     private String mLatexText = "";
     private float mSize = 20;
-    private int mStyle = TeXConstants.STYLE_DISPLAY;
+    private int mStyle = STYLE_DISPLAY;
     private Color mForegroundColor = new ColorA(android.graphics.Color.BLACK);
     private int mBackgroundColor = android.graphics.Color.TRANSPARENT;
     private int mType = TeXFormula.SERIF;
@@ -174,8 +179,8 @@ public class LaTeXView extends View {
             mTexIconBuilder = mFormula.new TeXIconBuilder();
         }
         if (mTexIcon == null) {
-            mTexIconBuilder.setSize(mSize * mSizeScale).setStyle(mStyle).setType(mType);
-            mTexIcon = mTexIconBuilder.build();
+            mTexIcon = mFormula.createTeXIcon(STYLE_DISPLAY, 50, UNIT_PIXEL, 1000f,
+                    TeXConstants.ALIGN_LEFT, UNIT_PIXEL, 20f);
         }
         mTexIcon.setInsets(new Insets(
                 getPaddingTop(),
@@ -213,7 +218,6 @@ public class LaTeXView extends View {
         } else {
             height = desiredHeight;
         }
-
         setMeasuredDimension(width, height);
     }
 
