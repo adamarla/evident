@@ -21,19 +21,18 @@ import java.util.Map;
 
 public class TeXMacros {
 
-    public TeXMacros() {
-        FactoryProvider.INSTANCE = new FactoryProviderAndroid(EvidentApp.app.getAssets());
+    public static void init(AssetManager amgr) {
+        // AssetManager amgr = EvidentApp.app.getAssets();
+        FactoryProvider.INSTANCE = new FactoryProviderAndroid(amgr);
         Log.d("EvidentApp", "TeXMacros: static block initialized");
-/*
+
         Map<String, String> map = TeXFormula.predefinedTeXFormulasAsString;
         for (String key : map.keySet()) TeXFormula.get(key);
-*/
-        AssetManager amgr = EvidentApp.app.getAssets();
+
         try {
             InputStream istream = amgr.open("tex/Macros.xml");
             TeXFormula.addPredefinedCommands(istream);
         } catch (Exception e) {
-            Log.e("EvidentApp", "Macros Exception!!");
             Log.e("EvidentApp", e.getMessage());
         }
     }

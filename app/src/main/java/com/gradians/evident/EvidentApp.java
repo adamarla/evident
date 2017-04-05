@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import com.gradians.evident.dom.Chapter;
+import com.gradians.evident.dom.Question;
+import com.gradians.evident.dom.Skill;
+import com.gradians.evident.dom.Snippet;
 import com.gradians.evident.util.TeXMacros;
 
 /**
@@ -22,64 +25,74 @@ public class EvidentApp extends Application {
 
     public static EvidentApp app;
 
-    public EvidentApp() {
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         EvidentApp.app = this;
         Log.d("EvidentApp", "Calling Application class onCreate -->");
-        chapters = new HashMap<Integer, Chapter>();
+        chapters = new HashMap<>();
+        questionById = new HashMap<>();
         Context ctx = this.getApplicationContext();
         AssetManager amgr = ctx.getAssets();
-        String[] idType = { "skills", "snippets", "questions" };
-        JsonReader reader;
+        TeXMacros.init(amgr);
+        String[] idType = { "chapters", "skills", "snippets", "questions" };
+        for (String s : idType) {
+            loadCatalog(s, amgr);
+        }
+    }
+
+    private void loadCatalog(String idType, AssetManager amgr) {
         try {
-            for (String s : idType) {
-                Log.d("EvidentApp", "catalog/" + s + ".json");
-                InputStream json = amgr.open("catalog/" + s + ".json");
-                reader = new JsonReader(new InputStreamReader(json));
-                reader.beginArray();
+            InputStream json = amgr.open("catalog/" + idType + ".json");
+            JsonReader reader = new JsonReader(new InputStreamReader(json));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                reader.beginObject();
+                int id = 0, cid = 0;
+                String path = "", desc = "";
                 while (reader.hasNext()) {
-                    reader.beginObject();
-                    int id = 0, cid = 0;
-                    while (reader.hasNext()) {
-                        String name = reader.nextName();
-                        if (name.equals("id")) {
-                            id = reader.nextInt();
-                        } else {
-                            if (reader.peek() != JsonToken.NULL)
-                                cid = reader.nextInt();
-                            else
-                                reader.nextNull();
-                        }
-                    }
-                    reader.endObject();
-                    if (cid != 0) {
-                        Chapter chapter = chapters.get(cid);
-                        if (chapter == null) {
-                            chapter = new Chapter(cid);
-                            chapters.put(cid, chapter);
-                        }
-                        if (s.equals("skills")) {
-                            chapter.addSkill(id);
-                        } else if (s.equals("snippets")) {
-                            chapter.addSnippet(id);
-                        } else {
-                            chapter.addProblem(id);
-                        }
-                        Log.d("EvidentApp", chapter.toString());
+                    String name = reader.nextName();
+                    if (name.equals("id")) {
+                        id = reader.nextInt();
+                        path = "skills/" + id;
+                    } else if (name.equals("cid")) {
+                        if (reader.peek() != JsonToken.NULL)
+                            cid = reader.nextInt();
+                        else
+                            reader.nextNull();
+                    } else if (name.equals("path")) {
+                        path = reader.nextString();
+                    } else if (name.equals("name")) {
+                        desc = reader.nextString();
                     }
                 }
-                reader.endArray();
-                reader.close();
-                TeXMacros macros = new TeXMacros();
+                reader.endObject();
+
+                if (idType.equals("chapters")) {
+                    chapters.put(id, new Chapter(id, desc));
+                } else if (cid != 0) {
+                    Chapter chapter = chapters.get(cid);
+                    if (idType.equals("skills")) {
+                        chapter.addSkill(new Skill(id, path));
+                    } else if (idType.equals("snippets")) {
+                        chapter.addSnippet(new Snippet(id, path));
+                    } else {
+                        Question q = new Question(id, path);
+                        chapter.addQuestion(q);
+                        questionById.put(id, q);
+                    }
+                    Log.d("EvidentApp", chapter.toString());
+                }
             }
+            reader.endArray();
+            reader.close();
         } catch (Exception ex) {
-            Log.e("init", ex.getMessage());
+            Log.e("EvidentApp", ex.getMessage());
         }
     }
 
     public HashMap<Integer, Chapter> chapters;
+    public HashMap<Integer, Question> questionById;
 }
+
+

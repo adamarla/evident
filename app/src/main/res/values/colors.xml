@@ -6,5 +6,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tomato">#FD6948</color>
+    <color name="panel_grey">#9F9E8F</color>
+    <color name="card_grey">#F7F7F7</color>
+    <color name="background_grey">#DCDCD3</color>
+    <color name="light_grey">#E5E5E5</color>
     <color name="dark_grey">#4D4D47</color>
 </resources>

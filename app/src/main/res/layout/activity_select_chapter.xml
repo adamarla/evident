@@ -4,6 +4,7 @@
     android:id="@+id/activity_select_chapter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_grey"
     tools:context="com.gradians.evident.activity.SelectChapter">
 
     <ListView
@@ -12,17 +13,5 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/half_padding"
         android:paddingRight="@dimen/half_padding"/>
-
-    <!--android.support.v4.view.ViewPager
-        android:id="@+id/chapter_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/half_padding"
-        android:paddingRight="@dimen/half_padding">
-        <ListView
-            android:id="@+id/skill_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </android.support.v4.view.ViewPager-->
 
 </RelativeLayout>

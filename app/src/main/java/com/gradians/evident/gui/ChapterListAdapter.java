@@ -23,19 +23,19 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Chapter child = mList[position];
+        Chapter chapter = mList[position];
 
         View view = convertView;
         if (view == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             view = layoutInflater.inflate(R.layout.display_line, parent, false);
-            view.setPadding(10, 0, 0, 10) ;
+            view.setPadding(10, 0, 0, 10);
             view.setBackgroundResource(R.color.white);
         }
 
-        TextView label = (TextView) view.findViewById(R.id.label) ;
-        label.setVisibility(View.VISIBLE);
-        label.setText(child.name);
+        TextView topline = (TextView) view.findViewById(R.id.top_line) ;
+        topline.setVisibility(View.VISIBLE);
+        topline.setText(chapter.name);
 
         return view;
     }

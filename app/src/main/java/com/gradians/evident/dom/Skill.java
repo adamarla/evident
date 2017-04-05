@@ -5,8 +5,11 @@ import android.content.Context;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.os.Parcel;
 import android.util.Log;
 import android.util.Xml;
+
+import com.gradians.evident.gui.ICard;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,28 +22,27 @@ import java.io.InputStream;
 
 public class Skill extends Asset {
 
-    public Skill(int id) {
-        this.id = id;
+    public Skill(int id, String path) {
+        super(id, path);
     }
 
     @Override
-    public void load(Context context) {
-        InputStream is;
-        File source = new File(context.getExternalFilesDir(null),
-                "skills/" + id + "/source.xml");
-        try {
-            is = new FileInputStream(source);
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
-            extract(parser);
-            is.close();
-        } catch (Exception e) {
-            Log.e("EvidentApp", e.getMessage());
-        }
+    public String getFront() {
+        return title;
     }
 
-    private void extract(XmlPullParser parser) throws Exception {
+    @Override
+    public String getBack() {
+        return studyNote;
+    }
+
+    @Override
+    public boolean isARiddle() {
+        return false;
+    }
+
+    @Override
+    protected void extract(XmlPullParser parser) throws Exception {
         boolean onFrontFace = true;
         try {
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
@@ -53,9 +55,9 @@ public class Skill extends Asset {
                         parser.next();
                         String text = parser.getText();
                         if (onFrontFace) {
-                            front = text;
+                            title = toPureTeX(text);
                         } else {
-                            back = text;
+                            studyNote = toPureTeX(text);
                         }
                     }
                 }
@@ -64,5 +66,25 @@ public class Skill extends Asset {
         } catch (Exception e ) {
             Log.d("EvidentApp", e.getMessage());
         }
+    }
+
+    private String title, studyNote;
+
+    public static Creator<Skill> CREATOR = new Creator<Skill>() {
+        @Override
+        public Skill createFromParcel(Parcel parcel) {
+            return new Skill(parcel);
+        }
+
+        @Override
+        public Skill[] newArray(int i) {
+            return new Skill[i];
+        }
+    };
+
+    private Skill(Parcel in) {
+        super();
+        id = in.readInt();
+        path = in.readString();
     }
 }

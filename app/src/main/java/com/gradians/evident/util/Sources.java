@@ -60,7 +60,6 @@ public class Sources {
                     int bytesRead ;
                     while (( zEntry = zipStream.getNextEntry()) != null) {
                         String zName = zEntry.getName() ;
-                        Log.d("EvidentApp", zName);
                         File zFile = new File(target, zName),
                                 zParent = zFile.getParentFile() ;
 

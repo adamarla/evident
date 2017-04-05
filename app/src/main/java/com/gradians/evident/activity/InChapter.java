@@ -1,23 +1,23 @@
 package com.gradians.evident.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gradians.evident.EvidentApp;
 import com.gradians.evident.R;
 import com.gradians.evident.dom.Chapter;
-import com.gradians.evident.dom.Skill;
-import com.gradians.evident.gui.AssetsListAdapter;
+import com.gradians.evident.dom.Snippet;
+import com.gradians.evident.gui.CardList;
+import com.gradians.evident.gui.ICard;
+import com.gradians.evident.gui.TabsPagerAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class InChapter extends AppCompatActivity {
@@ -27,30 +27,12 @@ public class InChapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_chapter);
 
-        Log.d("EvidentApp", "InChapter.onCreate -->");
-        // Set the adapter on the list
-        ArrayList<Skill> skills = EvidentApp.app.chapters.get(30).skills;
-        AssetsListAdapter adapter = new AssetsListAdapter(this,
-                skills.toArray(new Skill[skills.size()]));
-
-        // Set onItemClickListener on the list
-        ListView list = (ListView)findViewById(R.id.skill_list);
-        list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("EvidentApp", view.getClass().toString());
-                if (view.findViewById(R.id.front).getVisibility() == View.GONE) {
-                    view.findViewById(R.id.front).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.rear).setVisibility(View.GONE);
-                } else {
-                    view.findViewById(R.id.rear).setVisibility(View.VISIBLE);
-                    view.findViewById(R.id.front).setVisibility(View.GONE);
-                }
-            }
-        });
-
+        Chapter chapter = EvidentApp.app.chapters.get(30);
+        TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
+        ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        TabsPagerAdapter adapter = new TabsPagerAdapter(chapter, getSupportFragmentManager());
+        pager.setAdapter(adapter);
+        tabs.setupWithViewPager(pager);
     }
 
 }

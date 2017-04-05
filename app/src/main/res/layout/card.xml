@@ -5,10 +5,19 @@
     <!-- Wrap front_svg and back_svg within a RelativeLayout. Then, center the parent.
 Reference: http://stackoverflow.com/questions/5165799/replace-a-view-with-other-view-by-code -->
 
+    <ImageView
+        android:id="@+id/right_wrong_indicator"
+        android:layout_width="@dimen/corner_width"
+        android:layout_height="@dimen/corner_width"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
+
     <com.himamis.retex.renderer.android.LaTeXView
         android:id="@+id/front"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/half_padding"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
 
@@ -16,6 +25,7 @@ Reference: http://stackoverflow.com/questions/5165799/replace-a-view-with-other-
         android:id="@+id/rear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/half_padding"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:visibility="gone"/>

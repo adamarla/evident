@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gradians.evident.gui.AnswerButtonBar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/half_padding"
+    android:paddingBottom="@dimen/half_padding"
+    android:layout_alignParentBottom="true">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_is_false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/white_cross"
+        android:onClick="onButtonClick"
+        app:backgroundTint="@color/tomato"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_is_true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/white_tick"
+        android:onClick="onButtonClick"
+        app:backgroundTint="@android:color/holo_green_dark"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+</com.gradians.evident.gui.AnswerButtonBar>
