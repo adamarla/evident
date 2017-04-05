@@ -1,0 +1,12 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/renderer-android/**/*.class
+/renderer-android/**/*.jar
+/renderer-android/**/*.aar
+/renderer-share/**/*.class
