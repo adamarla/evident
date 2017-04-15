@@ -10,3 +10,4 @@
 /renderer-android/**/*.jar
 /renderer-android/**/*.aar
 /renderer-share/**/*.class
+/renderer-share/**/*.jar
