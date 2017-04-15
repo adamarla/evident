@@ -34,5 +34,4 @@ public class InChapter extends AppCompatActivity {
         pager.setAdapter(adapter);
         tabs.setupWithViewPager(pager);
     }
-
 }

@@ -13,7 +13,9 @@ public interface ICard extends Parcelable {
 
     String getBack();
 
-    void attempt(boolean correctly);
+    void setAttempt(boolean sezTrue);
+
+    boolean getAttempt();
 
     boolean hasBeenAttempted();
 
@@ -21,6 +23,6 @@ public interface ICard extends Parcelable {
 
     boolean isCorrect();
 
-    void load(Context context);
+    boolean hasSteps();
 
 }

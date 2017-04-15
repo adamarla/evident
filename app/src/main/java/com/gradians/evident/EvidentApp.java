@@ -81,7 +81,6 @@ public class EvidentApp extends Application {
                         chapter.addQuestion(q);
                         questionById.put(id, q);
                     }
-                    Log.d("EvidentApp", chapter.toString());
                 }
             }
             reader.endArray();

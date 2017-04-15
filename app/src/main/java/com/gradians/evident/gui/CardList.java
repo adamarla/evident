@@ -1,17 +1,19 @@
 package com.gradians.evident.gui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gradians.evident.R;
-import com.gradians.evident.dom.Snippet;
-import com.gradians.evident.dom.Step;
+import com.gradians.evident.activity.DoQuestion;
+import com.gradians.evident.dom.Asset;
+import com.gradians.evident.dom.Question;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -23,12 +25,14 @@ public class CardList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.cards_list, container, false);
-        ListView list = (ListView)view.findViewById(R.id.cards);
+        list = (ListView)view.findViewById(R.id.cards);
 
         Bundle args = getArguments();
-        cards = (ICard[])args.getParcelableArray("cards");
+        ICard[] cards = (ICard[])args.getParcelableArray("cards");
+        for (ICard card: cards)
+            ((Asset)card).load(this.getContext());
 
-        adapter = new CardListAdapter(getContext(), cards);
+        CardListAdapter adapter = new CardListAdapter(getContext(), cards);
         answerButtonBar = (AnswerButtonBar)view.findViewById(R.id.answer_button_bar);
         list.setAdapter(adapter);
 
@@ -48,8 +52,9 @@ public class CardList extends Fragment {
         return view;
     }
 
-    public ICard[] getCards() {
-        return cards;
+    public void smoothScrollTo(int position) {
+        list.smoothScrollToPosition(position);
+        list.setSelection(position);
     }
 
     public void hideButtonBar(boolean hide) {
@@ -60,10 +65,6 @@ public class CardList extends Fragment {
         answerButtonBar.enable(enable);
     }
 
-    public void refresh() {
-        adapter.notifyDataSetChanged();
-    }
-
     public static CardList newInstance(ICard[] cards) {
         CardList list = new CardList();
         Bundle bundle = new Bundle();
@@ -72,8 +73,47 @@ public class CardList extends Fragment {
         return list;
     }
 
-    CardListAdapter adapter;
-    ICard[] cards;
     AnswerButtonBar answerButtonBar;
+    ListView list;
 }
 
+class CardListListener implements AdapterView.OnItemClickListener, View.OnClickListener {
+
+    public CardListListener(CardList cardList) {
+        this.cardList = cardList;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        ICard card = ((CardView)view).getCard();
+        if (card.hasSteps()) {
+            Intent intent = new Intent(cardList.getActivity(), DoQuestion.class);
+            intent.putExtra("id", ((Asset)card).getId());
+            cardList.getActivity().startActivity(intent);
+        } else {
+            if (selectedView != null && selectedView != view) {
+                selectedView.unselect();
+            }
+
+            selectedView = (CardView)view;
+            selectedView.select();
+
+            if (card.hasBeenAttempted()) {
+                /* move the flipped card to top of listView */
+                if (selectedView.rightSideUp) cardList.smoothScrollTo(position);
+                cardList.enableButtonBar(false);
+            } else {
+                cardList.enableButtonBar(true);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        selectedView.answer(view.getId() == R.id.btn_is_true);
+    }
+
+    CardList cardList;
+    CardView selectedView;
+
+}

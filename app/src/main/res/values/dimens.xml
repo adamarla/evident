@@ -19,6 +19,7 @@
     <dimen name="radius_soft">10dp</dimen>
 
     <!-- Blue Corner -->
+    <dimen name="indicator_dia">18dp</dimen>
     <dimen name="corner_width">22dp</dimen>
     <dimen name="corner_height">32dp</dimen>
 

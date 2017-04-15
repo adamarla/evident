@@ -1,0 +1,134 @@
+package com.gradians.evident.gui;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.gradians.evident.R;
+import com.himamis.retex.renderer.android.LaTeXView;
+
+/**
+ * Created by adamarla on 4/12/17.
+ */
+
+public class CardView extends RelativeLayout {
+
+    public CardView(Context context) {
+        super(context);
+        initialize();
+    }
+
+    public CardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialize();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        front = (LaTeXView)findViewById(R.id.front);
+        rear = (LaTeXView)findViewById(R.id.rear);
+        trueIndicator = (ImageView)findViewById(R.id.true_indicator);
+        rightIndicator = (ImageView)findViewById(R.id.right_indicator);
+        expansionIndicator = (ImageView)findViewById(R.id.expansion_indicator);
+        rightSideUp = true;
+    }
+
+    public void setCard(ICard card) {
+        this.card = card;
+        front.setLatexText(card.getFront());
+        rear.setLatexText(card.getBack());
+        trueIndicator.setVisibility(View.INVISIBLE);
+        rightIndicator.setVisibility(View.INVISIBLE);
+        expansionIndicator.setVisibility(View.INVISIBLE);
+
+        int minHeight = card.isARiddle() ?
+                (int)getResources().getDimension(R.dimen.snippet_min_height):
+                (int)getResources().getDimension(R.dimen.skill_min_height);
+        this.setMinimumHeight(minHeight);
+
+        if (card.isARiddle()) {
+            enableTruthIndicators();
+            if (card.hasBeenAttempted())
+                enableAttemptedIndicators();
+        } else {
+            if (!card.hasSteps()) {
+                expansionIndicator.setImageResource(R.mipmap.ic_expand_more);
+                expansionIndicator.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public ICard getCard() {
+        return card;
+    }
+
+    public void select() {
+        setBackgroundResource(R.color.white);
+        if (card.hasBeenAttempted()) flip();
+    }
+
+    public void unselect() {
+        setBackgroundResource(R.drawable.bg_grey_card);
+        if (!rightSideUp) flip();
+    }
+
+    public void answer(boolean iSayCorrect) {
+        card.setAttempt(iSayCorrect);
+        enableAttemptedIndicators();
+    }
+
+    public void flip() {
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)front.getLayoutParams();
+        if (rear.getVisibility() == View.VISIBLE) {
+            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            lp.addRule(RelativeLayout.CENTER_VERTICAL);
+            rear.setVisibility(View.GONE);
+            trueIndicator.setVisibility(View.INVISIBLE);
+            rightIndicator.setVisibility(View.VISIBLE);
+            expansionIndicator.setImageResource(R.mipmap.ic_expand_more);
+        } else {
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            rear.setVisibility(View.VISIBLE);
+            if (card.isARiddle() && card.hasBeenAttempted()) {
+                trueIndicator.setVisibility(View.VISIBLE);
+                rightIndicator.setVisibility(View.INVISIBLE);
+            }
+            expansionIndicator.setImageResource(R.mipmap.ic_expand_less);
+        }
+        front.setLayoutParams(lp);
+        rightSideUp = !rightSideUp;
+    }
+
+    private void enableAttemptedIndicators() {
+        rightIndicator.setImageResource(card.isCorrect() == card.getAttempt() ?
+                R.mipmap.ic_thumbs_up : R.mipmap.ic_thumbs_down);
+        rightIndicator.setVisibility(View.VISIBLE);
+        expansionIndicator.setImageResource(R.mipmap.ic_expand_more);
+        expansionIndicator.setVisibility(View.VISIBLE);
+    }
+
+    private void enableTruthIndicators() {
+        if (card.isCorrect()) {
+            trueIndicator.setImageResource(R.mipmap.white_tick);
+            trueIndicator.setBackgroundResource(R.drawable.bg_circle_correct);
+        } else {
+            trueIndicator.setImageResource(R.mipmap.white_cross);
+            trueIndicator.setBackgroundResource(R.drawable.bg_circle_incorrect);
+        }
+    }
+
+    private void initialize() {
+        this.setPadding(10, 0, 0, 10);
+        this.setBackgroundResource(R.drawable.bg_grey_card);
+    }
+
+    private ICard card;
+    private LaTeXView front, rear;
+    private ImageView trueIndicator, rightIndicator, expansionIndicator;
+    public boolean rightSideUp;
+
+}

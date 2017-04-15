@@ -37,11 +37,6 @@ public class Skill extends Asset {
     }
 
     @Override
-    public boolean isARiddle() {
-        return false;
-    }
-
-    @Override
     protected void extract(XmlPullParser parser) throws Exception {
         boolean onFrontFace = true;
         try {
@@ -70,6 +65,13 @@ public class Skill extends Asset {
 
     private String title, studyNote;
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        super.writeToParcel(parcel, i);
+        parcel.writeString(title);
+        parcel.writeString(studyNote);
+    }
+
     public static Creator<Skill> CREATOR = new Creator<Skill>() {
         @Override
         public Skill createFromParcel(Parcel parcel) {
@@ -82,9 +84,9 @@ public class Skill extends Asset {
         }
     };
 
-    private Skill(Parcel in) {
-        super();
-        id = in.readInt();
-        path = in.readString();
+    protected Skill(Parcel in) {
+        super(in);
+        title = in.readString();
+        studyNote = in.readString();
     }
 }

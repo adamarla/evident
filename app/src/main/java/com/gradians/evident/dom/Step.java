@@ -10,7 +10,16 @@ import com.gradians.evident.gui.ICard;
  */
 public class Step implements ICard {
 
-    public Step() { }
+    public Step(String correct, String incorrect, String reason) {
+        if (correct != null && incorrect != null) {
+            faceShownIsCorrect = ((int)Math.random()*10)%2 == 0;
+        } else {
+            faceShownIsCorrect = correct != null;
+        }
+        this.correct = correct;
+        this.incorrect = incorrect;
+        this.reason = reason;
+    }
 
     @Override
     public String getFront() {
@@ -23,8 +32,13 @@ public class Step implements ICard {
     }
 
     @Override
-    public void attempt(boolean correctly) {
+    public void setAttempt(boolean correctly) {
         attempted = true;
+    }
+
+    @Override
+    public boolean getAttempt() {
+        return false;
     }
 
     @Override
@@ -43,12 +57,8 @@ public class Step implements ICard {
     }
 
     @Override
-    public void load(Context context) {
-        if (correct != null && incorrect != null) {
-            faceShownIsCorrect = ((int)Math.random()*10)%2 == 0;
-        } else {
-            faceShownIsCorrect = correct != null;
-        }
+    public boolean hasSteps() {
+        return false;
     }
 
     public String correct, incorrect, reason;

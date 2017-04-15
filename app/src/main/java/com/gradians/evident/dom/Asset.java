@@ -2,6 +2,7 @@ package com.gradians.evident.dom;
 
 import android.content.Context;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
 
@@ -17,28 +18,33 @@ import java.io.InputStream;
  * Created by adamarla on 3/19/17.
  */
 
-public abstract class Asset implements ICard {
-
-    protected int id;
-    protected String path;
+public abstract class Asset implements ICard, Parcelable {
 
     public Asset(int id, String path) {
         this.id = id;
         this.path = path;
+        loaded = false;
     }
 
-    protected Asset() {
-        // to support Parcelable
+    protected Asset(Parcel in) {
+        id = in.readInt();
+        path = in.readString();
     }
 
     @Override
     public boolean hasBeenAttempted() {
-        return false;
+        return true;
     }
 
     @Override
-    public void attempt(boolean correctly) {
+    public void setAttempt(boolean correctly) {
         // default implementation
+    }
+
+    @Override
+    public boolean getAttempt() {
+        // default implementation
+        return true;
     }
 
     public int getId() {
@@ -50,11 +56,22 @@ public abstract class Asset implements ICard {
     }
 
     @Override
+    public boolean isARiddle() {
+        return false;
+    }
+
+    @Override
     public boolean isCorrect() {
         return true;
     }
 
+    @Override
+    public boolean hasSteps() {
+        return false;
+    }
+
     public void load(Context context) {
+        if (loaded) return;
         InputStream is;
         File source = new File(context.getExternalFilesDir(null), path + "/source.xml");
         try {
@@ -64,12 +81,17 @@ public abstract class Asset implements ICard {
             parser.setInput(is, null);
             extract(parser);
             is.close();
+            loaded = true;
         } catch (Exception e) {
             Log.e("EvidentApp", e.getMessage());
         }
     }
 
     protected abstract void extract(XmlPullParser parser) throws Exception;
+
+    protected int id;
+    protected String path;
+    protected boolean loaded;
 
     @Override
     public int describeContents() {
@@ -80,6 +102,7 @@ public abstract class Asset implements ICard {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
         parcel.writeString(path);
+        parcel.writeInt(loaded ? 1 : 0);
     }
 
     protected String toPureTeX(String tex) {

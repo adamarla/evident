@@ -37,8 +37,14 @@ public class Snippet extends Asset {
     }
 
     @Override
-    public void attempt(boolean correctly) {
+    public void setAttempt(boolean iSayCorrect) {
+        attempt = iSayCorrect;
         attempted = true;
+    }
+
+    @Override
+    public boolean getAttempt() {
+        return attempt;
     }
 
     @Override
@@ -76,7 +82,17 @@ public class Snippet extends Asset {
     }
 
     String statement, reason;
-    boolean faceShownIsCorrect, attempted;
+    boolean faceShownIsCorrect, attempted, attempt;
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        super.writeToParcel(parcel, i);
+        parcel.writeString(statement);
+        parcel.writeString(reason);
+        parcel.writeInt(faceShownIsCorrect ? 1 : 0);
+        parcel.writeInt(attempted ? 1 : 0);
+        parcel.writeInt(attempt ? 1 : 0);
+    }
 
     public static Creator<Snippet> CREATOR = new Creator<Snippet>() {
         @Override
@@ -90,10 +106,13 @@ public class Snippet extends Asset {
         }
     };
 
-    private Snippet(Parcel in) {
-        super();
-        id = in.readInt();
-        path = in.readString();
+    protected Snippet(Parcel in) {
+        super(in);
+        statement = in.readString();
+        reason = in.readString();
+        faceShownIsCorrect = in.readInt() == 1;
+        attempted = in.readInt() == 1;
+        attempt = in.readInt() == 1;
     }
 
 }

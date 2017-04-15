@@ -39,8 +39,8 @@ public class Question extends Asset {
     }
 
     @Override
-    public boolean isARiddle() {
-        return false;
+    public boolean hasSteps() {
+        return true;
     }
 
     @Override
@@ -48,7 +48,8 @@ public class Question extends Asset {
         boolean inStep = false, outStep = false;
         ArrayList<Step> _steps = new ArrayList<>();
         try {
-            Step step = null;
+            Step step;
+            String correct = null, incorrect = null, reason;
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
                 int type = parser.getEventType();
 
@@ -59,7 +60,6 @@ public class Question extends Asset {
                 }
 
                 if (name.equals("step")) {
-                    step = new Step();
                     inStep = true;
                 } else if (name.equals("reason")) {
                     inStep = false;
@@ -72,12 +72,13 @@ public class Question extends Asset {
                     } else if (inStep) {
                         String isCorrect = parser.getAttributeValue(null, "correct");
                         if (isCorrect == null || isCorrect.equals("true")) {
-                            step.correct = toPureTeX(text);
+                            correct = toPureTeX(text);
                         } else {
-                            step.incorrect = toPureTeX(text);
+                            incorrect = toPureTeX(text);
                         }
                     } else if (outStep) {
-                        step.reason = toPureTeX(text);
+                        reason = toPureTeX(text);
+                        step = new Step(correct, incorrect, reason);
                         _steps.add(step);
                         outStep = false;
                     }
@@ -106,7 +107,7 @@ public class Question extends Asset {
     };
 
     private Question(Parcel in) {
-        super();
+        super(in);
         id = in.readInt();
         path = in.readString();
     }
