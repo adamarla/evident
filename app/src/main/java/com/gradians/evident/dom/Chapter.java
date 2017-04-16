@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.gradians.evident.gui.ICard;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +21,13 @@ public class Chapter implements Comparable<Chapter> {
         skills = new ArrayList<>();
         snippets = new ArrayList<>();
         questions = new ArrayList<>();
+    }
+
+    public void load(Context context) {
+        ArrayList[] assets = { skills, snippets, questions};
+        for (ArrayList list : assets)
+            for (Object asset: list)
+                ((Asset)asset).load(context);
     }
 
     public void addSkill(Skill skill) {

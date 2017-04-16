@@ -18,59 +18,60 @@ public class Snippet extends Asset {
 
     @Override
     public String getFront() {
-        return statement;
+        return step.getFront();
     }
 
     @Override
     public String getBack() {
-        return reason;
+        return step.getBack();
     }
 
     @Override
-    public boolean isARiddle() {
+    public boolean isAnswerable() {
         return true;
     }
 
     @Override
     public boolean hasBeenAttempted() {
-        return attempted;
+        return step.hasBeenAttempted();
     }
 
     @Override
-    public void setAttempt(boolean iSayCorrect) {
-        attempt = iSayCorrect;
-        attempted = true;
+    public void setAttempt(boolean isTrue) {
+        step.setAttempt(isTrue);
     }
 
     @Override
     public boolean getAttempt() {
-        return attempt;
+        return step.getAttempt();
     }
 
     @Override
     public boolean isCorrect() {
-        return faceShownIsCorrect;
+        return step.isCorrect();
     }
 
     @Override
     protected void extract(XmlPullParser parser) throws Exception {
-        boolean onFrontFace = true;
+        String correct = null, incorrect = null, reason;
         try {
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
                 int type = parser.getEventType();
                 if (type == XmlPullParser.START_TAG) {
                     String node = parser.getName();
-                    if (node.equals("reason")) {
-                        onFrontFace = false;
-                    } else if (node.equals("tex") || node.equals("image")) {
+                    if (node.equals("tex") || node.equals("image")) {
                         String isCorrect = parser.getAttributeValue(null, "correct");
                         parser.next();
                         String text = parser.getText();
-                        if (onFrontFace) {
-                            statement = toPureTeX(text);
-                            faceShownIsCorrect = isCorrect == null || isCorrect.equals("true");
+                        if (correct == null && incorrect == null) {
+                            if (isCorrect == null || isCorrect.equals("true"))
+                                correct = toPureTeX(text);
+                            else
+                                incorrect = toPureTeX(text);
                         } else {
                             reason = toPureTeX(text);
+                            step = new Step(correct, incorrect, reason);
+                            break;
                         }
                     }
                 }
@@ -81,17 +82,12 @@ public class Snippet extends Asset {
         }
     }
 
-    String statement, reason;
-    boolean faceShownIsCorrect, attempted, attempt;
+    Step step;
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
-        parcel.writeString(statement);
-        parcel.writeString(reason);
-        parcel.writeInt(faceShownIsCorrect ? 1 : 0);
-        parcel.writeInt(attempted ? 1 : 0);
-        parcel.writeInt(attempt ? 1 : 0);
+        parcel.writeParcelable(step, 0);
     }
 
     public static Creator<Snippet> CREATOR = new Creator<Snippet>() {
@@ -108,11 +104,7 @@ public class Snippet extends Asset {
 
     protected Snippet(Parcel in) {
         super(in);
-        statement = in.readString();
-        reason = in.readString();
-        faceShownIsCorrect = in.readInt() == 1;
-        attempted = in.readInt() == 1;
-        attempt = in.readInt() == 1;
+        step = in.readParcelable(this.getClass().getClassLoader());
     }
 
 }

@@ -26,18 +26,13 @@ public abstract class Asset implements ICard, Parcelable {
         loaded = false;
     }
 
-    protected Asset(Parcel in) {
-        id = in.readInt();
-        path = in.readString();
-    }
-
     @Override
     public boolean hasBeenAttempted() {
         return true;
     }
 
     @Override
-    public void setAttempt(boolean correctly) {
+    public void setAttempt(boolean isTrue) {
         // default implementation
     }
 
@@ -51,12 +46,8 @@ public abstract class Asset implements ICard, Parcelable {
         return id;
     }
 
-    public ICard[] getCards() {
-        return new ICard[]{ this };
-    }
-
     @Override
-    public boolean isARiddle() {
+    public boolean isAnswerable() {
         return false;
     }
 
@@ -92,6 +83,11 @@ public abstract class Asset implements ICard, Parcelable {
     protected int id;
     protected String path;
     protected boolean loaded;
+
+    protected Asset(Parcel in) {
+        id = in.readInt();
+        path = in.readString();
+    }
 
     @Override
     public int describeContents() {

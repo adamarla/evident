@@ -21,14 +21,6 @@ public class Question extends Asset {
     }
 
     @Override
-    public ICard[] getCards() {
-        ICard[] toReturn = new ICard[steps.length+1];
-        toReturn[0] = this;
-        System.arraycopy(steps, 0, toReturn, 1, steps.length);
-        return toReturn;
-    }
-
-    @Override
     public String getFront() {
         return statement;
     }
@@ -41,6 +33,10 @@ public class Question extends Asset {
     @Override
     public boolean hasSteps() {
         return true;
+    }
+
+    public Step[] getSteps() {
+        return steps;
     }
 
     @Override
@@ -94,6 +90,13 @@ public class Question extends Asset {
     String statement;
     Step[] steps;
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        super.writeToParcel(parcel, i);
+        parcel.writeString(statement);
+        parcel.writeParcelableArray(steps, 0);
+    }
+
     public static Creator<Question> CREATOR = new Creator<Question>() {
         @Override
         public Question createFromParcel(Parcel parcel) {
@@ -108,8 +111,8 @@ public class Question extends Asset {
 
     private Question(Parcel in) {
         super(in);
-        id = in.readInt();
-        path = in.readString();
+        statement = in.readString();
+        steps = (Step[])in.readParcelableArray(this.getClass().getClassLoader());
     }
 
 }

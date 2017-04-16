@@ -32,13 +32,14 @@ public class Step implements ICard {
     }
 
     @Override
-    public void setAttempt(boolean correctly) {
+    public void setAttempt(boolean isTrue) {
         attempted = true;
+        attempt = isTrue;
     }
 
     @Override
     public boolean getAttempt() {
-        return false;
+        return attempt;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class Step implements ICard {
     }
 
     @Override
-    public boolean isARiddle() {
+    public boolean isAnswerable() {
         return true;
     }
 
@@ -62,7 +63,7 @@ public class Step implements ICard {
     }
 
     public String correct, incorrect, reason;
-    public boolean faceShownIsCorrect, attempted;
+    public boolean faceShownIsCorrect, attempted, attempt;
 
     @Override
     public int describeContents() {
@@ -74,6 +75,9 @@ public class Step implements ICard {
         parcel.writeString(correct);
         parcel.writeString(incorrect);
         parcel.writeString(reason);
+        parcel.writeInt(faceShownIsCorrect ? 1 : 0);
+        parcel.writeInt(attempted ? 1 : 0);
+        parcel.writeInt(attempt ? 1 : 0);
     }
 
     public static Creator<Step> CREATOR = new Creator<Step>() {
@@ -92,6 +96,9 @@ public class Step implements ICard {
         correct = in.readString();
         incorrect = in.readString();
         reason = in.readString();
+        faceShownIsCorrect = in.readInt() == 1;
+        attempted = in.readInt() == 1;
+        attempt = in.readInt() == 1;
     }
 
 }

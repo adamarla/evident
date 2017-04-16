@@ -28,6 +28,8 @@ public class InChapter extends AppCompatActivity {
         setContentView(R.layout.activity_in_chapter);
 
         Chapter chapter = EvidentApp.app.chapters.get(30);
+        chapter.load(this);
+
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(chapter, getSupportFragmentManager());

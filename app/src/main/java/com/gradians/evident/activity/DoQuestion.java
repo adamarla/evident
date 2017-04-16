@@ -23,7 +23,7 @@ public class DoQuestion extends AppCompatActivity {
 
         int questionId = getIntent().getIntExtra("id", 0);
         Question question = EvidentApp.app.questionById.get(questionId);
-        cards = question.getCards();
+        cards = question.getSteps();
         currentStepIdx = 1;
 
         ICard[] toShow = new ICard[2];
@@ -32,15 +32,6 @@ public class DoQuestion extends AppCompatActivity {
         initiate(cardList);
     }
 
-//    void onButtonClick(View view) {
-//        CardListAdapter cardListAdapter = cardList.getAdapter();
-//        if (view.getId() == R.id.btn_is_true) {
-//            cardListAdapter.add(cards[currentStepIdx++]);
-//        } else if (view.getId() == R.id.btn_is_false) {
-//            cardListAdapter.add(cards[currentStepIdx++]);
-//        }
-//        cardList.hideButtonBar(currentStepIdx == cards.length);
-//    }
 
     CardList cardList;
     int currentStepIdx;

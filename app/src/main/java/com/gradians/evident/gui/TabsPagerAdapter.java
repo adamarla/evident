@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.gradians.evident.EvidentApp;
+import com.gradians.evident.dom.Asset;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 

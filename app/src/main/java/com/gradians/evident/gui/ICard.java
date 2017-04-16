@@ -13,13 +13,13 @@ public interface ICard extends Parcelable {
 
     String getBack();
 
-    void setAttempt(boolean sezTrue);
+    void setAttempt(boolean isTrue);
 
     boolean getAttempt();
 
     boolean hasBeenAttempted();
 
-    boolean isARiddle();
+    boolean isAnswerable();
 
     boolean isCorrect();
 

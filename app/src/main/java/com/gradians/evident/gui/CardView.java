@@ -44,12 +44,12 @@ public class CardView extends RelativeLayout {
         rightIndicator.setVisibility(View.INVISIBLE);
         expansionIndicator.setVisibility(View.INVISIBLE);
 
-        int minHeight = card.isARiddle() ?
+        int minHeight = card.isAnswerable() ?
                 (int)getResources().getDimension(R.dimen.snippet_min_height):
                 (int)getResources().getDimension(R.dimen.skill_min_height);
         this.setMinimumHeight(minHeight);
 
-        if (card.isARiddle()) {
+        if (card.isAnswerable()) {
             enableTruthIndicators();
             if (card.hasBeenAttempted())
                 enableAttemptedIndicators();
@@ -82,22 +82,22 @@ public class CardView extends RelativeLayout {
 
     public void flip() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)front.getLayoutParams();
-        if (rear.getVisibility() == View.VISIBLE) {
+        if (rightSideUp) {
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            rear.setVisibility(View.VISIBLE);
+            if (card.isAnswerable() && card.hasBeenAttempted()) {
+                trueIndicator.setVisibility(View.VISIBLE);
+                rightIndicator.setVisibility(View.INVISIBLE);
+            }
+            expansionIndicator.setImageResource(R.mipmap.ic_expand_less);
+        } else {
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             lp.addRule(RelativeLayout.CENTER_VERTICAL);
             rear.setVisibility(View.GONE);
             trueIndicator.setVisibility(View.INVISIBLE);
             rightIndicator.setVisibility(View.VISIBLE);
             expansionIndicator.setImageResource(R.mipmap.ic_expand_more);
-        } else {
-            lp.addRule(RelativeLayout.CENTER_VERTICAL, 0);
-            lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            rear.setVisibility(View.VISIBLE);
-            if (card.isARiddle() && card.hasBeenAttempted()) {
-                trueIndicator.setVisibility(View.VISIBLE);
-                rightIndicator.setVisibility(View.INVISIBLE);
-            }
-            expansionIndicator.setImageResource(R.mipmap.ic_expand_less);
         }
         front.setLayoutParams(lp);
         rightSideUp = !rightSideUp;

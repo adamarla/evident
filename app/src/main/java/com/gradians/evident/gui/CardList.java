@@ -13,7 +13,6 @@ import android.widget.ListView;
 import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
 import com.gradians.evident.dom.Asset;
-import com.gradians.evident.dom.Question;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -29,8 +28,6 @@ public class CardList extends Fragment {
 
         Bundle args = getArguments();
         ICard[] cards = (ICard[])args.getParcelableArray("cards");
-        for (ICard card: cards)
-            ((Asset)card).load(this.getContext());
 
         CardListAdapter adapter = new CardListAdapter(getContext(), cards);
         answerButtonBar = (AnswerButtonBar)view.findViewById(R.id.answer_button_bar);
@@ -40,7 +37,7 @@ public class CardList extends Fragment {
         list.setOnItemClickListener(listener);
         answerButtonBar.setOnClickListener(listener);
 
-        if (cards[cards.length-1].isARiddle()) {
+        if (cards[cards.length-1].isAnswerable()) {
             list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
             list.setSelector(R.drawable.bg_selected_card);
             list.setDrawSelectorOnTop(true);
