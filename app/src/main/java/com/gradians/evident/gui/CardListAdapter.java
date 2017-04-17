@@ -10,6 +10,9 @@ import com.gradians.evident.R;
 
 import com.gradians.evident.dom.Asset;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Created by adamarla on 3/19/17.
  */
@@ -17,7 +20,7 @@ import com.gradians.evident.dom.Asset;
 public class CardListAdapter extends ArrayAdapter<ICard> {
 
     public CardListAdapter(Context ctx, ICard[] cards) {
-        super(ctx, R.layout.card, cards);
+        super(ctx, R.layout.card, new ArrayList<ICard>(Arrays.asList(cards)));
         this.ctx = ctx;
     }
 

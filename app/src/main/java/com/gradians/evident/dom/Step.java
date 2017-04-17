@@ -1,6 +1,5 @@
 package com.gradians.evident.dom;
 
-import android.content.Context;
 import android.os.Parcel;
 
 import com.gradians.evident.gui.ICard;
@@ -19,6 +18,8 @@ public class Step implements ICard {
         this.correct = correct;
         this.incorrect = incorrect;
         this.reason = reason;
+        steps = false;
+        answerable = true;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class Step implements ICard {
 
     @Override
     public boolean isAnswerable() {
-        return true;
+        return answerable;
     }
 
     @Override
@@ -59,11 +60,11 @@ public class Step implements ICard {
 
     @Override
     public boolean hasSteps() {
-        return false;
+        return steps;
     }
 
     public String correct, incorrect, reason;
-    public boolean faceShownIsCorrect, attempted, attempt;
+    public boolean faceShownIsCorrect, attempted, attempt, steps, answerable;
 
     @Override
     public int describeContents() {
@@ -78,6 +79,8 @@ public class Step implements ICard {
         parcel.writeInt(faceShownIsCorrect ? 1 : 0);
         parcel.writeInt(attempted ? 1 : 0);
         parcel.writeInt(attempt ? 1 : 0);
+        parcel.writeInt(steps ? 1 : 0);
+        parcel.writeInt(answerable ? 1: 0);
     }
 
     public static Creator<Step> CREATOR = new Creator<Step>() {
@@ -99,6 +102,8 @@ public class Step implements ICard {
         faceShownIsCorrect = in.readInt() == 1;
         attempted = in.readInt() == 1;
         attempt = in.readInt() == 1;
+        steps = in.readInt() == 1;
+        answerable = in.readInt() == 1;
     }
 
 }

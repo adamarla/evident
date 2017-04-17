@@ -4,6 +4,8 @@ package com.gradians.evident.dom;
 import android.os.Parcel;
 import android.util.Log;
 
+import com.gradians.evident.gui.ICard;
+
 import org.xmlpull.v1.XmlPullParser;
 
 /**
@@ -17,38 +19,8 @@ public class Snippet extends Asset {
     }
 
     @Override
-    public String getFront() {
-        return step.getFront();
-    }
-
-    @Override
-    public String getBack() {
-        return step.getBack();
-    }
-
-    @Override
-    public boolean isAnswerable() {
-        return true;
-    }
-
-    @Override
-    public boolean hasBeenAttempted() {
-        return step.hasBeenAttempted();
-    }
-
-    @Override
-    public void setAttempt(boolean isTrue) {
-        step.setAttempt(isTrue);
-    }
-
-    @Override
-    public boolean getAttempt() {
-        return step.getAttempt();
-    }
-
-    @Override
-    public boolean isCorrect() {
-        return step.isCorrect();
+    public ICard getCard() {
+        return step;
     }
 
     @Override

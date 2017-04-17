@@ -38,27 +38,34 @@ public class CardView extends RelativeLayout {
 
     public void setCard(ICard card) {
         this.card = card;
+
         front.setLatexText(card.getFront());
         rear.setLatexText(card.getBack());
+
         trueIndicator.setVisibility(View.INVISIBLE);
         rightIndicator.setVisibility(View.INVISIBLE);
         expansionIndicator.setVisibility(View.INVISIBLE);
-
-        int minHeight = card.isAnswerable() ?
-                (int)getResources().getDimension(R.dimen.snippet_min_height):
-                (int)getResources().getDimension(R.dimen.skill_min_height);
-        this.setMinimumHeight(minHeight);
+        int minHeight;
 
         if (card.isAnswerable()) {
-            enableTruthIndicators();
-            if (card.hasBeenAttempted())
+            minHeight = (int)getResources().getDimension(R.dimen.snippet_min_height);
+
+            enableTrueIndicator();
+
+            if (card.hasBeenAttempted()) {
                 enableAttemptedIndicators();
+                enableExpansionIndicator(R.mipmap.ic_expand_more);
+            }
+
         } else {
-            if (!card.hasSteps()) {
-                expansionIndicator.setImageResource(R.mipmap.ic_expand_more);
-                expansionIndicator.setVisibility(View.VISIBLE);
+            minHeight = (int)getResources().getDimension(R.dimen.skill_min_height);
+            if (card.hasSteps()) {
+                enableExpansionIndicator(R.mipmap.ic_launch_new);
+            } else {
+                enableExpansionIndicator(R.mipmap.ic_expand_more);
             }
         }
+        this.setMinimumHeight(minHeight);
     }
 
     public ICard getCard() {
@@ -103,6 +110,11 @@ public class CardView extends RelativeLayout {
         rightSideUp = !rightSideUp;
     }
 
+    private void enableExpansionIndicator(int resId) {
+        expansionIndicator.setImageResource(resId);
+        expansionIndicator.setVisibility(View.VISIBLE);
+    }
+
     private void enableAttemptedIndicators() {
         rightIndicator.setImageResource(card.isCorrect() == card.getAttempt() ?
                 R.mipmap.ic_thumbs_up : R.mipmap.ic_thumbs_down);
@@ -111,7 +123,7 @@ public class CardView extends RelativeLayout {
         expansionIndicator.setVisibility(View.VISIBLE);
     }
 
-    private void enableTruthIndicators() {
+    private void enableTrueIndicator() {
         if (card.isCorrect()) {
             trueIndicator.setImageResource(R.mipmap.white_tick);
             trueIndicator.setBackgroundResource(R.drawable.bg_circle_correct);

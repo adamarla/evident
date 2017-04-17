@@ -3,11 +3,14 @@ package com.gradians.evident.gui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.gradians.evident.EvidentApp;
 import com.gradians.evident.dom.Asset;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
+import com.gradians.evident.dom.Skill;
+import com.gradians.evident.dom.Snippet;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -23,17 +26,27 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         ICard[] cards;
+        int i = 0;
         switch (position) {
             case 0:
-                cards = chapter.skills.toArray(new ICard[chapter.skills.size()]);
+                cards = new ICard[chapter.skills.size()];
+                for (Skill s: chapter.skills) {
+                    cards[i] = s; i++;
+                }
                 break;
             case 1:
-                cards = chapter.snippets.toArray(new ICard[chapter.snippets.size()]);
+                cards = new ICard[chapter.snippets.size()];
+                for (Snippet s: chapter.snippets) {
+                    cards[i] = s.getCard(); i++;
+                }
                 break;
             default:
-                cards = chapter.questions.toArray(new ICard[chapter.questions.size()]);
+                cards = new ICard[chapter.questions.size()];
+                for (Question q: chapter.questions) {
+                    cards[i] = q.getCard(); i++;
+                }
         }
-        return CardList.newInstance(cards);
+        return CardList.newInstance(null, cards, chapter.id);
     }
 
     @Override

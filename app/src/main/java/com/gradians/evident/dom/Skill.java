@@ -1,29 +1,26 @@
 package com.gradians.evident.dom;
 
-import android.content.Context;
-
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.os.Parcel;
 import android.util.Log;
-import android.util.Xml;
 
 import com.gradians.evident.gui.ICard;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by adamarla on 3/19/17.
  */
 
-public class Skill extends Asset {
+public class Skill extends Asset implements ICard {
 
     public Skill(int id, String path) {
         super(id, path);
+    }
+
+    @Override
+    public ICard getCard() {
+        return this;
     }
 
     @Override
@@ -34,6 +31,36 @@ public class Skill extends Asset {
     @Override
     public String getBack() {
         return studyNote;
+    }
+
+    // Irrelevant methods begin ==>
+    @Override
+    public boolean hasBeenAttempted() {
+        return true;
+    }
+
+    @Override
+    public void setAttempt(boolean isTrue) { }
+
+    @Override
+    public boolean getAttempt() {
+        return true;
+    }
+    // Irrelevant methods end <==
+
+    @Override
+    public boolean isAnswerable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCorrect() {
+        return true;
+    }
+
+    @Override
+    public boolean hasSteps() {
+        return false;
     }
 
     @Override

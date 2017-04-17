@@ -21,17 +21,16 @@ public class DoQuestion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_do_question);
 
-        int questionId = getIntent().getIntExtra("id", 0);
-        Question question = EvidentApp.app.questionById.get(questionId);
+        int chapterId = getIntent().getIntExtra("chapterId", 0);
+        int position = getIntent().getIntExtra("position", 0);
+        Chapter chapter = EvidentApp.app.chapters.get(chapterId);
+        Question question = chapter.questions.get(position);
         cards = question.getSteps();
         currentStepIdx = 1;
 
-        ICard[] toShow = new ICard[2];
-        System.arraycopy(cards, 0, toShow, 0, 2);
-        cardList = CardList.newInstance(toShow);
+        cardList = CardList.newInstance(question.getCard(), cards, 0);
         initiate(cardList);
     }
-
 
     CardList cardList;
     int currentStepIdx;

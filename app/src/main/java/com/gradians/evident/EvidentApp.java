@@ -29,7 +29,6 @@ public class EvidentApp extends Application {
     public void onCreate() {
         super.onCreate();
         EvidentApp.app = this;
-        Log.d("EvidentApp", "Calling Application class onCreate -->");
         chapters = new HashMap<>();
         questionById = new HashMap<>();
         Context ctx = this.getApplicationContext();

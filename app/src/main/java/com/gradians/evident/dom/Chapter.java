@@ -1,13 +1,8 @@
 package com.gradians.evident.dom;
 
 import android.content.Context;
-import android.util.SparseArray;
-import android.view.View;
-
-import com.gradians.evident.gui.ICard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by adamarla on 3/19/17.

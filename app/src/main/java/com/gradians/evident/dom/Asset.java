@@ -18,7 +18,7 @@ import java.io.InputStream;
  * Created by adamarla on 3/19/17.
  */
 
-public abstract class Asset implements ICard, Parcelable {
+public abstract class Asset implements Parcelable {
 
     public Asset(int id, String path) {
         this.id = id;
@@ -26,40 +26,11 @@ public abstract class Asset implements ICard, Parcelable {
         loaded = false;
     }
 
-    @Override
-    public boolean hasBeenAttempted() {
-        return true;
-    }
-
-    @Override
-    public void setAttempt(boolean isTrue) {
-        // default implementation
-    }
-
-    @Override
-    public boolean getAttempt() {
-        // default implementation
-        return true;
-    }
-
     public int getId() {
         return id;
     }
 
-    @Override
-    public boolean isAnswerable() {
-        return false;
-    }
-
-    @Override
-    public boolean isCorrect() {
-        return true;
-    }
-
-    @Override
-    public boolean hasSteps() {
-        return false;
-    }
+    public abstract ICard getCard();
 
     public void load(Context context) {
         if (loaded) return;
