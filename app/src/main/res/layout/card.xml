@@ -25,7 +25,7 @@
         android:id="@+id/rear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_grey_card"
+        android:background="@drawable/bg_reference_text"
         android:padding="@dimen/half_padding"
         android:layout_below="@id/front"
         android:layout_alignParentLeft="true"

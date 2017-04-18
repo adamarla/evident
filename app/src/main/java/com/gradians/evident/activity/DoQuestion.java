@@ -23,18 +23,16 @@ public class DoQuestion extends AppCompatActivity {
 
         int chapterId = getIntent().getIntExtra("chapterId", 0);
         int position = getIntent().getIntExtra("position", 0);
+
         Chapter chapter = EvidentApp.app.chapters.get(chapterId);
         Question question = chapter.questions.get(position);
-        cards = question.getSteps();
-        currentStepIdx = 1;
 
-        cardList = CardList.newInstance(question.getCard(), cards, 0);
+        ICard[] cards = question.getSteps();
+        CardList cardList = CardList.newInstance(question.getCard(), cards, 0);
+
         initiate(cardList);
     }
 
-    CardList cardList;
-    int currentStepIdx;
-    ICard[] cards;
 
     private void initiate(CardList cl) {
         FragmentManager fragmentManager = getSupportFragmentManager();

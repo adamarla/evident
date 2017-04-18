@@ -21,7 +21,7 @@ public class SelectChapter extends AppCompatActivity {
         setContentView(R.layout.activity_select_chapter);
 
         // Set the adapter on the list
-        ChapterList chapterList = new ChapterList(this);
+        final ChapterList chapterList = new ChapterList(this);
         ChapterListAdapter adapter = new ChapterListAdapter(this, chapterList.getChapters());
 
         // Set onItemClickListener on the list
@@ -32,6 +32,7 @@ public class SelectChapter extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(parent, InChapter.class) ;
+                intent.putExtra("chapterId", chapterList.getChapters()[i].id);
                 intent.putExtra("record", true) ;
                 parent.startActivity(intent);
             }

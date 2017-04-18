@@ -33,7 +33,10 @@ public class CardView extends RelativeLayout {
         trueIndicator = (ImageView)findViewById(R.id.true_indicator);
         rightIndicator = (ImageView)findViewById(R.id.right_indicator);
         expansionIndicator = (ImageView)findViewById(R.id.expansion_indicator);
-        rightSideUp = true;
+    }
+
+    public void disableExpansion() {
+        expansionIndicator.setVisibility(View.INVISIBLE);
     }
 
     public void setCard(ICard card) {
@@ -49,9 +52,7 @@ public class CardView extends RelativeLayout {
 
         if (card.isAnswerable()) {
             minHeight = (int)getResources().getDimension(R.dimen.snippet_min_height);
-
             enableTrueIndicator();
-
             if (card.hasBeenAttempted()) {
                 enableAttemptedIndicators();
                 enableExpansionIndicator(R.mipmap.ic_expand_more);
@@ -73,12 +74,17 @@ public class CardView extends RelativeLayout {
     }
 
     public void select() {
+        // The list 'selector' bg_selected_card.xml
+        // needs a transparent drawable background,
+        // otherwise it covers the text of the
+        // selected item. That's why explicitly
+        // specifying background as White
         setBackgroundResource(R.color.white);
         if (card.hasBeenAttempted()) flip();
     }
 
     public void unselect() {
-        setBackgroundResource(R.drawable.bg_grey_card);
+        setBackgroundResource(R.drawable.bg_unselected_card);
         if (!rightSideUp) flip();
     }
 
@@ -135,7 +141,8 @@ public class CardView extends RelativeLayout {
 
     private void initialize() {
         this.setPadding(10, 0, 0, 10);
-        this.setBackgroundResource(R.drawable.bg_grey_card);
+        this.setBackgroundResource(R.drawable.bg_unselected_card);
+        this.rightSideUp = true;
     }
 
     private ICard card;

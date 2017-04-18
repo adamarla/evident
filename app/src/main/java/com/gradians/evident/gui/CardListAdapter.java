@@ -8,10 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.gradians.evident.R;
 
-import com.gradians.evident.dom.Asset;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by adamarla on 3/19/17.
@@ -20,8 +17,11 @@ import java.util.Arrays;
 public class CardListAdapter extends ArrayAdapter<ICard> {
 
     public CardListAdapter(Context ctx, ICard[] cards) {
-        super(ctx, R.layout.card, new ArrayList<ICard>(Arrays.asList(cards)));
-        this.ctx = ctx;
+        super(ctx, R.layout.card, cards);
+    }
+
+    public CardListAdapter(Context ctx, ArrayList<ICard> cards) {
+        super(ctx, R.layout.card, cards);
     }
 
     @Override
@@ -37,7 +37,5 @@ public class CardListAdapter extends ArrayAdapter<ICard> {
         view.setCard(card);
         return view;
     }
-
-    private Context ctx;
 
 }

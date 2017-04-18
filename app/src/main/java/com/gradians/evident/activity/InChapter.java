@@ -27,7 +27,9 @@ public class InChapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_chapter);
 
-        Chapter chapter = EvidentApp.app.chapters.get(30);
+        int chapterId = getIntent().getIntExtra("chapterId", 0);
+
+        Chapter chapter = EvidentApp.app.chapters.get(chapterId);
         chapter.load(this);
 
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);

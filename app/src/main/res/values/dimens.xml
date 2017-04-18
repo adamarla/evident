@@ -11,6 +11,7 @@
     <dimen name="elevation">5dp</dimen>
     <dimen name="full_margin">10dp</dimen>
     <dimen name="half_margin">5dp</dimen>
+    <dimen name="divider_height">3dp</dimen>
     <dimen name="extra_large_font">22sp</dimen>
     <dimen name="large_font">16sp</dimen>
     <dimen name="skill_min_height">80dp</dimen>
