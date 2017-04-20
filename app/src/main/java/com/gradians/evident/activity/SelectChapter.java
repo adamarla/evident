@@ -38,6 +38,6 @@ public class SelectChapter extends AppCompatActivity {
             }
         });
 
-        new Sources().download(this);
+        new Sources(this);
     }
 }

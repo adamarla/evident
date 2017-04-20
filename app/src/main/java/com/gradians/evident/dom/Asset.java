@@ -35,7 +35,7 @@ public abstract class Asset implements Parcelable {
     public void load(Context context) {
         if (loaded) return;
         InputStream is;
-        File source = new File(context.getExternalFilesDir(null), path + "/source.xml");
+        File source = new File(context.getExternalFilesDir(null), "vault/" + path + "/source.xml");
         try {
             is = new FileInputStream(source);
             XmlPullParser parser = Xml.newPullParser();

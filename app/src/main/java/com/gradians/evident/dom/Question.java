@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Question extends Asset {
 
     public Question(int id, String path) {
-        super(id, "bank/vault/" + path);
+        super(id, path);
     }
 
     @Override
