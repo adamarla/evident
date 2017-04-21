@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.util.Log;
 
 import com.gradians.evident.gui.ICard;
+import com.gradians.evident.util.SourceParser;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -29,56 +30,12 @@ public class Question extends Asset {
     }
 
     @Override
-    protected void extract(XmlPullParser parser) throws Exception {
-        boolean inStep = false, outStep = false;
-        ArrayList<Step> _steps = new ArrayList<>();
-        String correct = null, incorrect = null, reason;
-        try {
-            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-                int type = parser.getEventType();
-
-                String name = parser.getName();
-                if (type != XmlPullParser.START_TAG || name == null) {
-                    parser.next() ;
-                    continue ;
-                }
-
-                if (name.equals("step")) {
-                    inStep = true;
-                    correct = null; incorrect = null;
-                } else if (name.equals("reason")) {
-                    inStep = false;
-                    outStep = true;
-                } else if (name.equals("tex") || name.equals("image")) {
-                    String isCorrect = parser.getAttributeValue(null, "correct");
-                    parser.next();
-                    String text = parser.getText();
-                    if (statement == null) {
-                        statement = new Step(toPureTeX(text), null, null);
-                        statement.steps = true;
-                        statement.answerable = false;
-                    } else if (inStep) {
-                        if (isCorrect == null || isCorrect.equals("true")) {
-                            correct = toPureTeX(text);
-                        } else {
-                            incorrect = toPureTeX(text);
-                        }
-                    } else if (outStep) {
-                        reason = toPureTeX(text);
-                        _steps.add(new Step(correct, incorrect, reason));
-                        outStep = false;
-                    }
-                }
-                parser.next();
-            }
-            steps = _steps.toArray(new Step[_steps.size()]);
-        } catch (Exception e ) {
-            Log.d("EvidentApp", e.getMessage());
-        }
+    protected void extract(SourceParser parser) throws Exception {
+        parser.populateQuestion(this);
     }
 
-    Step statement;
-    Step[] steps;
+    public Step statement;
+    public Step[] steps;
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {

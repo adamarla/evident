@@ -1,11 +1,9 @@
 package com.gradians.evident.dom;
 
-import org.xmlpull.v1.XmlPullParser;
-
 import android.os.Parcel;
-import android.util.Log;
 
 import com.gradians.evident.gui.ICard;
+import com.gradians.evident.util.SourceParser;
 
 
 /**
@@ -64,33 +62,34 @@ public class Skill extends Asset implements ICard {
     }
 
     @Override
-    protected void extract(XmlPullParser parser) throws Exception {
-        boolean onFrontFace = true;
-        try {
-            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-                int type = parser.getEventType();
-                if (type == XmlPullParser.START_TAG) {
-                    String node = parser.getName();
-                    if (node.equals("reason")) {
-                        onFrontFace = false;
-                    } else if (node.equals("tex") || node.equals("image")) {
-                        parser.next();
-                        String text = parser.getText();
-                        if (onFrontFace) {
-                            title = toPureTeX(text);
-                        } else {
-                            studyNote = toPureTeX(text);
-                        }
-                    }
-                }
-                parser.next() ;
-            }
-        } catch (Exception e ) {
-            Log.d("EvidentApp", e.getMessage());
-        }
+    protected void extract(SourceParser parser) throws Exception {
+        parser.populateSkill(this);
+//        boolean onFrontFace = true;
+//        try {
+//            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+//                int type = parser.getEventType();
+//                if (type == XmlPullParser.START_TAG) {
+//                    String node = parser.getName();
+//                    if (node.equals("reason")) {
+//                        onFrontFace = false;
+//                    } else if (node.equals("tex") || node.equals("image")) {
+//                        parser.next();
+//                        String text = parser.getText();
+//                        if (onFrontFace) {
+//                            title = toPureTeX(text);
+//                        } else {
+//                            studyNote = toPureTeX(text);
+//                        }
+//                    }
+//                }
+//                parser.next() ;
+//            }
+//        } catch (Exception e ) {
+//            Log.d("EvidentApp", e.getMessage());
+//        }
     }
 
-    private String title, studyNote;
+    public String title, studyNote;
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {

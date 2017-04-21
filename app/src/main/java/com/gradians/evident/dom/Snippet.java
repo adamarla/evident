@@ -2,11 +2,9 @@ package com.gradians.evident.dom;
 
 
 import android.os.Parcel;
-import android.util.Log;
 
 import com.gradians.evident.gui.ICard;
-
-import org.xmlpull.v1.XmlPullParser;
+import com.gradians.evident.util.SourceParser;
 
 /**
  * Created by adamarla on 3/19/17.
@@ -24,37 +22,38 @@ public class Snippet extends Asset {
     }
 
     @Override
-    protected void extract(XmlPullParser parser) throws Exception {
-        String correct = null, incorrect = null, reason;
-        try {
-            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-                int type = parser.getEventType();
-                if (type == XmlPullParser.START_TAG) {
-                    String node = parser.getName();
-                    if (node.equals("tex") || node.equals("image")) {
-                        String isCorrect = parser.getAttributeValue(null, "correct");
-                        parser.next();
-                        String text = parser.getText();
-                        if (correct == null && incorrect == null) {
-                            if (isCorrect == null || isCorrect.equals("true"))
-                                correct = toPureTeX(text);
-                            else
-                                incorrect = toPureTeX(text);
-                        } else {
-                            reason = toPureTeX(text);
-                            step = new Step(correct, incorrect, reason);
-                            break;
-                        }
-                    }
-                }
-                parser.next() ;
-            }
-        } catch (Exception e ) {
-            Log.d("EvidentApp", e.getMessage());
-        }
+    protected void extract(SourceParser parser) throws Exception {
+        parser.populateSnippet(this);
+//        String correct = null, incorrect = null, reason;
+//        try {
+//            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+//                int type = parser.getEventType();
+//                if (type == XmlPullParser.START_TAG) {
+//                    String node = parser.getName();
+//                    if (node.equals("tex") || node.equals("image")) {
+//                        String isCorrect = parser.getAttributeValue(null, "correct");
+//                        parser.next();
+//                        String text = parser.getText();
+//                        if (correct == null && incorrect == null) {
+//                            if (isCorrect == null || isCorrect.equals("true"))
+//                                correct = toPureTeX(text);
+//                            else
+//                                incorrect = toPureTeX(text);
+//                        } else {
+//                            reason = toPureTeX(text);
+//                            step = new Step(correct, incorrect, reason);
+//                            break;
+//                        }
+//                    }
+//                }
+//                parser.next() ;
+//            }
+//        } catch (Exception e ) {
+//            Log.d("EvidentApp", e.getMessage());
+//        }
     }
 
-    Step step;
+    public Step step;
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {

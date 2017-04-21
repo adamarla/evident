@@ -1,6 +1,7 @@
 package com.gradians.evident.dom;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 
 public class CardList extends Fragment {
 
-//    boolean cardsAreLinked = false;
     int chapterId;
 
     public static CardList newInstance(ICard header, ICard[] items, int chapterId) {

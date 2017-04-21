@@ -3,10 +3,7 @@ package com.gradians.evident.gui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
-import com.gradians.evident.EvidentApp;
-import com.gradians.evident.dom.Asset;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;

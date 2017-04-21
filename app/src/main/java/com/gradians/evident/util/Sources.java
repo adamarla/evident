@@ -44,7 +44,7 @@ public class Sources {
             Log.e("EvidentApp", e.getMessage());
         }
         Git git = new Git(repo);
-        final PullCommand pullCommand = git.pull().setRemote("master");
+        final PullCommand pullCommand = git.pull();
         AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {

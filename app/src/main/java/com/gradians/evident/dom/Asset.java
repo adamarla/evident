@@ -7,11 +7,17 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.gradians.evident.gui.ICard;
+import com.gradians.evident.util.SourceParser;
+import com.gradians.evident.util.TeXSourceParser;
+import com.gradians.evident.util.XMLSourceParser;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 
 /**
@@ -23,7 +29,6 @@ public abstract class Asset implements Parcelable {
     public Asset(int id, String path) {
         this.id = id;
         this.path = path;
-        loaded = false;
     }
 
     public int getId() {
@@ -33,27 +38,30 @@ public abstract class Asset implements Parcelable {
     public abstract ICard getCard();
 
     public void load(Context context) {
-        if (loaded) return;
-        InputStream is;
-        File source = new File(context.getExternalFilesDir(null), "vault/" + path + "/source.xml");
+        File dir = new File(context.getExternalFilesDir(null), "vault/" + path);
+        File source = new File(dir, "source.tex");
+        if (!source.exists())
+            source = new File(dir, "source.xml");
+
         try {
-            is = new FileInputStream(source);
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
+            InputStream is = new FileInputStream(source);
+            SourceParser parser;
+            if (source.getName().endsWith("xml")) {
+                parser = new XMLSourceParser(is);
+            } else {
+                parser = new TeXSourceParser(is);
+            }
             extract(parser);
             is.close();
-            loaded = true;
         } catch (Exception e) {
             Log.e("EvidentApp", e.getMessage());
         }
     }
 
-    protected abstract void extract(XmlPullParser parser) throws Exception;
+    protected abstract void extract(SourceParser parser) throws Exception;
 
     protected int id;
     protected String path;
-    protected boolean loaded;
 
     protected Asset(Parcel in) {
         id = in.readInt();
@@ -69,30 +77,10 @@ public abstract class Asset implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
         parcel.writeString(path);
-        parcel.writeInt(loaded ? 1 : 0);
     }
 
-    protected String toPureTeX(String tex) {
-        String[] lines = tex.split("\n");
-        StringBuilder sb = new StringBuilder();
-
-        boolean textMode = false;
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            if (line.startsWith("%text")) {
-                textMode = true;
-                continue;
-            } else if (line.startsWith("%")) {
-                textMode = false;
-                continue;
-            }
-
-            if (textMode)
-                sb.append(String.format("\\text{%s} \\\\\n", line));
-            else
-                sb.append(String.format("%s\n", line));
-        }
-        return sb.toString();
+    @Override
+    public String toString() {
+        return id + " " + path;
     }
-
 }
