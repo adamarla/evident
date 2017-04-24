@@ -1,67 +1,7 @@
 [
   {
-    "id": 2,
-    "name": "Sets"
-  },
-  {
     "id": 3,
     "name": "Relations and Functions"
-  },
-  {
-    "id": 4,
-    "name": "Trigonometric Functions"
-  },
-  {
-    "id": 5,
-    "name": "Mathematical Induction"
-  },
-  {
-    "id": 6,
-    "name": "Complex Numbers"
-  },
-  {
-    "id": 7,
-    "name": "Linear Inequalities"
-  },
-  {
-    "id": 8,
-    "name": "Permutations and Combinations"
-  },
-  {
-    "id": 9,
-    "name": "Binomial Theorem"
-  },
-  {
-    "id": 10,
-    "name": "Sequences and Series"
-  },
-  {
-    "id": 11,
-    "name": "Straight Lines"
-  },
-  {
-    "id": 12,
-    "name": "Conic Sections"
-  },
-  {
-    "id": 13,
-    "name": "Introductory 3d Geometry"
-  },
-  {
-    "id": 14,
-    "name": "Limits and Derivatives"
-  },
-  {
-    "id": 15,
-    "name": "Mathematical Reasoning"
-  },
-  {
-    "id": 16,
-    "name": "Statistics"
-  },
-  {
-    "id": 17,
-    "name": "Probability 1"
   },
   {
     "id": 18,
@@ -96,16 +36,8 @@
     "name": "Vector Algebra"
   },
   {
-    "id": 27,
-    "name": "Linear Programming"
-  },
-  {
     "id": 28,
     "name": "Probability 2"
-  },
-  {
-    "id": 29,
-    "name": "Generic"
   },
   {
     "id": 30,

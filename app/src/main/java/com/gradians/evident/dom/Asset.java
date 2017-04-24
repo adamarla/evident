@@ -37,11 +37,11 @@ public abstract class Asset implements Parcelable {
 
     public abstract ICard getCard();
 
-    public void load(Context context) {
+    public boolean load(Context context) {
         File dir = new File(context.getExternalFilesDir(null), "vault/" + path);
         File source = new File(dir, "source.tex");
-        if (!source.exists())
-            source = new File(dir, "source.xml");
+        if (!source.exists()) source = new File(dir, "source.xml");
+        if (!source.exists()) return false;
 
         try {
             InputStream is = new FileInputStream(source);
@@ -53,9 +53,11 @@ public abstract class Asset implements Parcelable {
             }
             extract(parser);
             is.close();
+            return true;
         } catch (Exception e) {
-            Log.e("EvidentApp", e.getMessage());
+            Log.e("EvidentApp", "Error loading " + e.getMessage());
         }
+        return false;
     }
 
     protected abstract void extract(SourceParser parser) throws Exception;

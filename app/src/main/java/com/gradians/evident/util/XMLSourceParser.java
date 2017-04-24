@@ -53,7 +53,7 @@ public class XMLSourceParser extends SourceParser {
                 parser.next() ;
             }
         } catch (Exception e ) {
-            Log.d("EvidentApp", "Error populating Skill" + e.getMessage());
+            Log.d("EvidentApp", "Error populating Skill " + e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class XMLSourceParser extends SourceParser {
                 parser.next() ;
             }
         } catch (Exception e ) {
-            Log.d("EvidentApp", "Error populating Snippet" + e.getMessage());
+            Log.d("EvidentApp", "Error populating Snippet " + e.getMessage());
         }
 
     }
@@ -135,31 +135,8 @@ public class XMLSourceParser extends SourceParser {
             }
             question.steps = _steps.toArray(new Step[_steps.size()]);
         } catch (Exception e ) {
-            Log.d("EvidentApp", "Error populating Question" + e.getMessage());
+            Log.d("EvidentApp", "Error populating Question " + e.getMessage());
         }
-    }
-
-    protected String toPureTeX(String tex) {
-        String[] lines = tex.split("\n");
-        StringBuilder sb = new StringBuilder();
-
-        boolean textMode = false;
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            if (line.startsWith("%text")) {
-                textMode = true;
-                continue;
-            } else if (line.startsWith("%")) {
-                textMode = false;
-                continue;
-            }
-
-            if (textMode)
-                sb.append(String.format("\\text{%s} \\\\\n", line));
-            else
-                sb.append(String.format("%s\n", line));
-        }
-        return sb.toString();
     }
 
     XmlPullParser parser;

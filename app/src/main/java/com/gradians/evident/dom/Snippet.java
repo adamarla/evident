@@ -24,33 +24,6 @@ public class Snippet extends Asset {
     @Override
     protected void extract(SourceParser parser) throws Exception {
         parser.populateSnippet(this);
-//        String correct = null, incorrect = null, reason;
-//        try {
-//            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-//                int type = parser.getEventType();
-//                if (type == XmlPullParser.START_TAG) {
-//                    String node = parser.getName();
-//                    if (node.equals("tex") || node.equals("image")) {
-//                        String isCorrect = parser.getAttributeValue(null, "correct");
-//                        parser.next();
-//                        String text = parser.getText();
-//                        if (correct == null && incorrect == null) {
-//                            if (isCorrect == null || isCorrect.equals("true"))
-//                                correct = toPureTeX(text);
-//                            else
-//                                incorrect = toPureTeX(text);
-//                        } else {
-//                            reason = toPureTeX(text);
-//                            step = new Step(correct, incorrect, reason);
-//                            break;
-//                        }
-//                    }
-//                }
-//                parser.next() ;
-//            }
-//        } catch (Exception e ) {
-//            Log.d("EvidentApp", e.getMessage());
-//        }
     }
 
     public Step step;

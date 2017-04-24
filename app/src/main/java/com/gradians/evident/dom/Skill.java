@@ -64,29 +64,6 @@ public class Skill extends Asset implements ICard {
     @Override
     protected void extract(SourceParser parser) throws Exception {
         parser.populateSkill(this);
-//        boolean onFrontFace = true;
-//        try {
-//            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-//                int type = parser.getEventType();
-//                if (type == XmlPullParser.START_TAG) {
-//                    String node = parser.getName();
-//                    if (node.equals("reason")) {
-//                        onFrontFace = false;
-//                    } else if (node.equals("tex") || node.equals("image")) {
-//                        parser.next();
-//                        String text = parser.getText();
-//                        if (onFrontFace) {
-//                            title = toPureTeX(text);
-//                        } else {
-//                            studyNote = toPureTeX(text);
-//                        }
-//                    }
-//                }
-//                parser.next() ;
-//            }
-//        } catch (Exception e ) {
-//            Log.d("EvidentApp", e.getMessage());
-//        }
     }
 
     public String title, studyNote;

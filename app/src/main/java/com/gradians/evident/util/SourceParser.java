@@ -20,5 +20,28 @@ public abstract class SourceParser {
     public abstract void populateSnippet(Snippet snippet);
     public abstract void populateQuestion(Question question);
 
+    protected String toPureTeX(String tex) {
+        String[] lines = tex.split("\n");
+        StringBuilder sb = new StringBuilder();
+
+        boolean textMode = false;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.startsWith("%text")) {
+                textMode = true;
+                continue;
+            } else if (line.startsWith("%")) {
+                textMode = false;
+                continue;
+            }
+
+            if (textMode)
+                sb.append(String.format("\\text{%s} \\\\\n", line));
+            else
+                sb.append(String.format("%s\n", line));
+        }
+        return sb.toString();
+    }
+
     InputStream inputStream;
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Created by adamarla on 3/19/17.
@@ -21,9 +22,16 @@ public class Chapter implements Comparable<Chapter> {
 
     public void load(Context context) {
         ArrayList[] assets = { skills, snippets, questions};
-        for (ArrayList list : assets)
+        for (ArrayList list : assets) {
+            Stack<Asset> blanks = new Stack<>();
             for (Object asset: list)
-                ((Asset)asset).load(context);
+                if (!((Asset)asset).load(context))
+                    blanks.push((Asset)asset);
+            // don't want nothing to do with assets that
+            // could not get loaded for whatever reason
+            while (!blanks.empty())
+                list.remove(blanks.pop());
+        }
     }
 
     public void addSkill(Skill skill) {
