@@ -51,6 +51,7 @@ public class TeXSourceParser extends SourceParser {
 
             while (!br.readLine().trim().startsWith("\\reason")) {}
 
+            boolean inCenterMode = false;
             StringBuilder studyNote = new StringBuilder();
             studyNote.append("%text\n");
             while ((line = br.readLine()) != null) {
@@ -58,24 +59,52 @@ public class TeXSourceParser extends SourceParser {
                     continue;
 
                 if (line.trim().startsWith("\\begin")) {
-                    studyNote.append("\n%\n"); // end text-mode
+                    if (line.startsWith("\\begin{itemize}")) {
+                        inCenterMode = false;
+                        continue;
+                    } else if (line.startsWith("\\begin{center}")) {
+                        inCenterMode = true;
+                        continue;
+                    }
+
+                    if (line.trim().startsWith("\\begin{align}")) {
+                        studyNote.append("\n%\n"); // end text-mode
+                    } else if (inCenterMode) {
+                        studyNote.append("\n%\n"); // end text-mode
+                        studyNote.append("\\begin{align}\n");
+                    }
                     studyNote.append(line).append("\n");
-                } else if (line.trim().startsWith("\\end") && !line.trim().startsWith("\\end{skill}")) {
-                    studyNote.append(line).append("\n"); // end math-mode
-                    studyNote.append("%text\n"); // resume text-mode
-                } else if (line.trim().startsWith("\\end{skill}")) {
-                    studyNote.append("\n%");
-                    break;
+                } else if (line.trim().startsWith("\\end")) {
+                    if (line.trim().startsWith("\\end{itemize}"))
+                        continue;
+
+                    if (line.trim().startsWith("\\end{center}")) {
+                        if (inCenterMode) {
+                            line = line.replace("\\end{center}", "\\end{align}");
+                            inCenterMode = false;
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    if (line.trim().startsWith("\\end{align}")) {
+                        studyNote.append("\n").append(line).append("\n"); // end math-mode
+                        studyNote.append("%text\n"); // resume text-mode
+                    } else if (line.trim().startsWith("\\end{skill}")) {
+                        studyNote.append("\n%\n");
+                        break;
+                    } else {
+                        studyNote.append("\n").append(line);
+                    }
                 } else if (line.trim().startsWith("\\[")) {
                     studyNote.append("\n").append(line).append("\n");
                 } else if (!line.trim().isEmpty()) {
-                    line = line.replace("\\newline", "");
-                    line = line.replace("\\underline", "\\underline\\text");
                     studyNote.append("\n").append(line);
                 }
             }
             skill.studyNote = toPureTeX(studyNote.toString());
         } catch (Exception e) {
+            Log.d("EvidentApp", skill.studyNote);
             Log.e("EvidentApp", "Error populating Skill " + e.getMessage());
         }
     }
@@ -90,6 +119,18 @@ public class TeXSourceParser extends SourceParser {
         question.statement = new Step("\\text{Statement is thus}", null, null);
         question.steps = new Step[1];
         question.steps[0] = new Step("\\text{Correct}", null, "\text{Reason}");
+    }
+
+    @Override
+    protected String toPureTeX(String tex) {
+        tex = tex.replaceAll("\\\\item\\{(.*)\\}", " - $1");
+        tex = tex.replaceAll("\\\\smallmath", "");
+        tex = tex.replaceAll("\\\\underline", "\\\\underline\\\\text");
+        tex = tex.replaceAll("\\\\newline", "");
+        tex = tex.replaceAll("\\\\toprule", "\\\\hline");
+        tex = tex.replaceAll("midrule", "hline");
+        tex = tex.replaceAll("\\\\bottomrule", "\\\\hline");
+        return super.toPureTeX(tex);
     }
 
     BufferedReader br;
