@@ -2,6 +2,7 @@ package com.himamis.retex.renderer.android;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -40,6 +41,8 @@ public class LaTeXView extends View {
     private float mScreenDensity;
     private float mSizeScale;
 
+    private float lineWidth, fontSize, lineSpacing;
+
     public LaTeXView(Context context) {
         super(context);
         mScreenDensity = context.getResources().getDisplayMetrics().density;
@@ -68,6 +71,10 @@ public class LaTeXView extends View {
         if (FactoryProvider.INSTANCE == null) {
             FactoryProvider.INSTANCE = new FactoryProviderAndroid(getContext().getAssets());
         }
+        Resources resources = getContext().getResources();
+        fontSize = Float.parseFloat(resources.getString(R.string.font_size));
+        lineSpacing = Float.parseFloat(resources.getString(R.string.line_spacing));
+        lineWidth = Float.parseFloat(resources.getString(R.string.line_width));
     }
 
     private void readAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -172,6 +179,8 @@ public class LaTeXView extends View {
             try {
                 mFormula = new TeXFormula(mLatexText);
             } catch (ParseException exception) {
+                Log.d("EvidentApp", mLatexText);
+                Log.e("EvidentApp", exception.getMessage());
                 mFormula = TeXFormula.getPartialTeXFormula(mLatexText);
             }
         }
@@ -179,8 +188,8 @@ public class LaTeXView extends View {
             mTexIconBuilder = mFormula.new TeXIconBuilder();
         }
         if (mTexIcon == null) {
-            mTexIcon = mFormula.createTeXIcon(STYLE_DISPLAY, 50, UNIT_PIXEL, 1000f,
-                    TeXConstants.ALIGN_LEFT, UNIT_PIXEL, 20f);
+            mTexIcon = mFormula.createTeXIcon(STYLE_DISPLAY, fontSize, UNIT_PIXEL, lineWidth,
+                    TeXConstants.ALIGN_LEFT, UNIT_PIXEL, lineSpacing);
         }
         mTexIcon.setInsets(new Insets(
                 getPaddingTop(),

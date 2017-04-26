@@ -1,0 +1,5 @@
+<resources>
+    <string name="font_size">45</string>
+    <string name="line_width">1000</string>
+    <string name="line_spacing">20</string>
+</resources>
