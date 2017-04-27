@@ -69,7 +69,7 @@ public class LaTeXView extends View {
 
     private void initFactoryProvider() {
         if (FactoryProvider.INSTANCE == null) {
-            FactoryProvider.INSTANCE = new FactoryProviderAndroid(getContext().getAssets());
+            FactoryProvider.INSTANCE = new FactoryProviderAndroid(getContext());
         }
         Resources resources = getContext().getResources();
         fontSize = Float.parseFloat(resources.getString(R.string.font_size));

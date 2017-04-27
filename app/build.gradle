@@ -26,8 +26,10 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile("com.android.support:appcompat-v7:${supportLibVersion}") { force = true }
     compile("com.android.support:design:${supportLibVersion}") { force = true }
+
     compile project(':renderer-android') // for android API 7 and up
     compile project(':renderer-share') // for android API 7 and up
-    compile 'com.koushikdutta.ion:ion:2.+'
+
+    compile 'com.koushikdutta.ion:ion:2.1.9'
     compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.1.201504261725-r'
 }

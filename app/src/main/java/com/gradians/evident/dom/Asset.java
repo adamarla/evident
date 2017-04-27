@@ -35,6 +35,10 @@ public abstract class Asset implements Parcelable {
         return id;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public abstract ICard getCard();
 
     public boolean load(Context context) {

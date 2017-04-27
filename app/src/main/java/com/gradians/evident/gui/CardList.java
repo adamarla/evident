@@ -65,15 +65,17 @@ public class CardList extends Fragment {
         answerButtonBar = (AnswerButtonBar)view.findViewById(R.id.answer_button_bar);
         answerButtonBar.setOnClickListener(listener);
 
-        if (cards[0].isAnswerable()) {
-            list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-            list.setSelector(R.drawable.bg_selected_card);
-            list.setDrawSelectorOnTop(true);
-            list.setSelectionAfterHeaderView();
-            enableButtonBar(false);
-        } else {
-            answerButtonBar.setVisibility(View.GONE);
-        }
+        if (cards.length > 0)
+            if (cards[0].isAnswerable()) {
+                list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+                list.setSelector(R.drawable.bg_selected_card);
+                list.setDrawSelectorOnTop(true);
+                list.setSelectionAfterHeaderView();
+                enableButtonBar(false);
+            } else {
+                answerButtonBar.setVisibility(View.GONE);
+            }
+
         return view;
     }
 

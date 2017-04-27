@@ -40,4 +40,14 @@
         <Return name="f" />
     </Command>
 
+    <Command name="dydx" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.util.TeXMacros" />
+            <Argument type="String" value="dydx" />
+            <!-- the command has 0 argument -->
+            <Argument type="float" value="0" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
 </PredefinedCommands>

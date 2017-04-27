@@ -42,6 +42,7 @@ publishing {
 dependencies {
 	compile project(':renderer-share')
 	// testCompile 'junit:junit:4.11'
+    compile 'com.caverock:androidsvg:1.2.2-beta-1'
 }
 
 android {
@@ -49,6 +50,10 @@ android {
     buildToolsVersion "25.0.2"
 //	compileSdkVersion 21 // rootProject.compileSdkVersion
 //	buildToolsVersion "21.1.2" // rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 15
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

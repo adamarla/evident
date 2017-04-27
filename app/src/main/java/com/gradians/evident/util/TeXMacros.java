@@ -1,6 +1,7 @@
 package com.gradians.evident.util;
 
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -21,9 +22,9 @@ import java.util.Map;
 
 public class TeXMacros {
 
-    public static void init(AssetManager amgr) {
-        // AssetManager amgr = EvidentApp.app.getAssets();
-        FactoryProvider.INSTANCE = new FactoryProviderAndroid(amgr);
+    public static void init(Context context) {
+        AssetManager amgr = context.getAssets();
+        FactoryProvider.INSTANCE = new FactoryProviderAndroid(context);
         Log.d("EvidentApp", "TeXMacros: static block initialized");
 
         Map<String, String> map = TeXFormula.predefinedTeXFormulasAsString;
@@ -76,6 +77,10 @@ public class TeXMacros {
 
     public Atom title(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula(String.format("\\textcolor{blue}{\\text{%s}}", args[1])).root;
+    }
+
+    public Atom dydx(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("\\dfrac{dy}{dx}").root;
     }
 
 }

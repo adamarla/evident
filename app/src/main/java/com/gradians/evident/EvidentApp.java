@@ -38,8 +38,8 @@ public class EvidentApp extends Application {
         chapters = new HashMap<>();
         questionById = new HashMap<>();
         ctx = this.getApplicationContext();
+        TeXMacros.init(ctx);
         AssetManager amgr = ctx.getAssets();
-        TeXMacros.init(amgr);
         loadCatalog("chapters", amgr);
     }
 

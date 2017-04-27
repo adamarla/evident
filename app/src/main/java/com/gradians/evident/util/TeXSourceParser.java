@@ -29,12 +29,12 @@ public class TeXSourceParser extends SourceParser {
         Log.d("EvidentApp", "Populating Skill " + skill.getId());
         String line;
         try {
-            Pattern titlePattern = Pattern.compile("(textcolor\\{blue\\}\\{)(.*)(\\})");
+            Pattern titlePattern = Pattern.compile("textcolor\\{blue\\}\\{(.*)\\}");
             StringBuilder title = new StringBuilder();
             while ((line = br.readLine()) != null) {
                 Matcher matcher = titlePattern.matcher(line);
                 if (matcher.find()) {
-                    title.append(String.format("\\title{%s} \\\\\n", matcher.group(2)));
+                    title.append(String.format("\\title{%s} \\\\\n", matcher.group(1)));
                     title.append("%text\n");
                     break;
                 }
@@ -51,18 +51,27 @@ public class TeXSourceParser extends SourceParser {
 
             while (!br.readLine().trim().startsWith("\\reason")) {}
 
+            Pattern imagePattern = Pattern.compile("includegraphics\\[.*\\]\\{(.*)\\}");
             boolean inCenterMode = false;
             StringBuilder studyNote = new StringBuilder();
             studyNote.append("%text\n");
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine().trim()) != null) {
                 if (line.startsWith("%text") || line.equals("%"))
                     continue;
+
+                Matcher matcher = imagePattern.matcher(line);
+                if (matcher.find()) {
+                    line = line.replace(matcher.group(1), skill.getPath() + "/" + matcher.group(1));
+                    line = line.replace("0.33", "1.0");
+                    studyNote.append("\n").append(line);
+                    continue;
+                }
 
                 if (line.trim().startsWith("\\begin")) {
                     if (line.startsWith("\\begin{itemize}")) {
                         inCenterMode = false;
                         continue;
-                    } else if (line.startsWith("\\begin{center}")) {
+                    } else if (line.trim().startsWith("\\begin{center}")) {
                         inCenterMode = true;
                         continue;
                     }

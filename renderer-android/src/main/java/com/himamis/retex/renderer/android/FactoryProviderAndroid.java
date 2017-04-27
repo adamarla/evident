@@ -12,14 +12,17 @@ import com.himamis.retex.renderer.share.platform.graphics.GraphicsFactory;
 import com.himamis.retex.renderer.share.platform.parser.ParserFactory;
 import com.himamis.retex.renderer.share.platform.resources.ResourceLoaderFactory;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 
 public class FactoryProviderAndroid extends FactoryProvider {
 	
 	private AssetManager mAssetManager;
+	private Context mContext;
 	
-	public FactoryProviderAndroid(AssetManager assetManager) {
-		mAssetManager = assetManager;
+	public FactoryProviderAndroid(Context context) {
+		mAssetManager = context.getAssets();
+		mContext = context;
 	}
 
 	@Override
@@ -34,7 +37,7 @@ public class FactoryProviderAndroid extends FactoryProvider {
 
 	@Override
 	protected GraphicsFactory createGraphicsFactory() {
-		return new GraphicsFactoryAndroid();
+		return new GraphicsFactoryAndroid(mContext);
 	}
 
 	@Override
