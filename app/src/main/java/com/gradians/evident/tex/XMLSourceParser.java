@@ -1,4 +1,4 @@
-package com.gradians.evident.util;
+package com.gradians.evident.tex;
 
 import android.util.Log;
 import android.util.Xml;

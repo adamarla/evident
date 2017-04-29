@@ -1,4 +1,4 @@
-package com.gradians.evident.util;
+package com.gradians.evident.tex;
 
 import android.util.Log;
 
@@ -6,7 +6,6 @@ import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
 import com.gradians.evident.dom.Snippet;
 import com.gradians.evident.dom.Step;
-import com.himamis.retex.renderer.share.platform.geom.Line2D;
 
 import java.io.BufferedReader;
 import java.io.IOException;

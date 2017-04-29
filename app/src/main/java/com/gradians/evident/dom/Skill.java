@@ -3,7 +3,7 @@ package com.gradians.evident.dom;
 import android.os.Parcel;
 
 import com.gradians.evident.gui.ICard;
-import com.gradians.evident.util.SourceParser;
+import com.gradians.evident.tex.SourceParser;
 
 
 /**

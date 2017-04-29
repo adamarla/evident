@@ -1,14 +1,9 @@
 package com.gradians.evident.dom;
 
 import android.os.Parcel;
-import android.util.Log;
 
 import com.gradians.evident.gui.ICard;
-import com.gradians.evident.util.SourceParser;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.ArrayList;
+import com.gradians.evident.tex.SourceParser;
 
 /**
  * Created by adamarla on 3/19/17.

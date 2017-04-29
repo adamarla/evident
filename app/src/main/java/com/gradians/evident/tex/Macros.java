@@ -1,26 +1,16 @@
-package com.gradians.evident.util;
+package com.gradians.evident.tex;
 
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
-
-import com.gradians.evident.EvidentApp;
-import com.himamis.retex.renderer.android.FactoryProviderAndroid;
 import com.himamis.retex.renderer.share.Atom;
 import com.himamis.retex.renderer.share.TeXFormula;
 import com.himamis.retex.renderer.share.TeXParser;
 import com.himamis.retex.renderer.share.exception.ParseException;
-import com.himamis.retex.renderer.share.platform.FactoryProvider;
-
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Created by adamarla on 3/25/17.
  */
 
-public class TeXMacros {
+public class Macros {
 
     public Atom dd(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula(String.format("\\dfrac{d}{d%s}%s", args[2], args[1])).root;

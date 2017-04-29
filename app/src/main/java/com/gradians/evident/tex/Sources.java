@@ -1,4 +1,4 @@
-package com.gradians.evident.util;
+package com.gradians.evident.tex;
 
 import android.content.Context;
 import android.os.AsyncTask;

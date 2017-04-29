@@ -1,4 +1,4 @@
-package com.gradians.evident.util;
+package com.gradians.evident.tex;
 
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;

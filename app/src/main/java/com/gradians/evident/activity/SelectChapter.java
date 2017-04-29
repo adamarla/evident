@@ -1,30 +1,18 @@
 package com.gradians.evident.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.gradians.evident.EvidentApp;
 import com.gradians.evident.R;
-import com.gradians.evident.dom.Chapter;
-import com.gradians.evident.dom.Question;
-import com.gradians.evident.dom.Skill;
-import com.gradians.evident.dom.Snippet;
-import com.gradians.evident.util.Sources;
+import com.gradians.evident.tex.Sources;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 
 public class SelectChapter extends AppCompatActivity {
 

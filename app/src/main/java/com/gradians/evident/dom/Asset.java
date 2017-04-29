@@ -4,20 +4,14 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.util.Xml;
 
 import com.gradians.evident.gui.ICard;
-import com.gradians.evident.util.SourceParser;
-import com.gradians.evident.util.TeXSourceParser;
-import com.gradians.evident.util.XMLSourceParser;
+import com.gradians.evident.tex.SourceParser;
+import com.gradians.evident.tex.TeXSourceParser;
+import com.gradians.evident.tex.XMLSourceParser;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 
 /**

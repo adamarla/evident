@@ -47,7 +47,7 @@ public class EvidentApp extends Application {
     private void initJLaTeXMath(Context context) {
         AssetManager amgr = context.getAssets();
         FactoryProvider.INSTANCE = new FactoryProviderAndroid(context);
-        Log.d("EvidentApp", "TeXMacros: static block initialized");
+        Log.d("EvidentApp", "Macros: static block initialized");
 
         Map<String, String> map = TeXFormula.predefinedTeXFormulasAsString;
         for (String key : map.keySet()) TeXFormula.get(key);
