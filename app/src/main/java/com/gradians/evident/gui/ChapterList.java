@@ -1,6 +1,7 @@
 package com.gradians.evident.gui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -11,14 +12,17 @@ import com.google.gson.JsonParser;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.gradians.evident.activity.SelectChapter;
 import com.gradians.evident.dom.Asset;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
 import com.gradians.evident.dom.Snippet;
 
+import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 
 import java.io.File;
 import java.io.FileReader;
@@ -92,9 +96,11 @@ public class ChapterList {
         if (array != null) highestId = parseResult(array, 0);
 
         final int last = highestId;
+        final ProgressDialog dialog = ((SelectChapter)caller).getProgressDialog();
         Log.d("EvidentApp", "download started (last = " + last + ")");
         Ion.with(caller)
-                .load("http://www.gradians.com/sku/list?last="+last)
+                .load("http://www.gradians.com/sku/list?last=" + last)
+                .progressDialog(dialog)
                 .asJsonArray()
                 .setCallback(new FutureCallback<JsonArray>() {
 
@@ -111,6 +117,7 @@ public class ChapterList {
                         } else {
                             Log.e("EvidentApp", "Error retrieving assets.json " + e.getMessage());
                         }
+                        dialog.cancel();
                     }
                 });
     }

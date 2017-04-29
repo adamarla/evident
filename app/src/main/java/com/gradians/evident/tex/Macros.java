@@ -77,4 +77,20 @@ public class Macros {
         return new TeXFormula(String.format("\\,^{%s}P_{%s}", args[1], args[2])).root;
     }
 
+    public Atom sini(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\sin^{-1}\\left( %s\\right)", args[1])).root;
+    }
+
+    public Atom cosi(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\sin^{-1}\\left( %s\\right)", args[1])).root;
+    }
+
+    public Atom tani(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\sin^{-1}\\left( %s\\right)", args[1])).root;
+    }
+
+    public Atom csci(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\sin^{-1}\\left( %s\\right)", args[1])).root;
+    }
+
 }

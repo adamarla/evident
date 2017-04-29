@@ -27,7 +27,7 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populateSkill(Skill skill) {
-        Log.d("EvidentApp", "Populating Skill " + skill.getId());
+        Log.d("EvidentApp", "Populating Skill " + skill.getId() + " from " + skill.getPath());
         String line;
         try {
             Pattern titlePattern = Pattern.compile("textcolor\\{blue\\}\\{(.*)\\}");
@@ -61,7 +61,7 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populateSnippet(Snippet snippet) {
-        Log.d("EvidentApp", "Populating Snippet " + snippet.getId());
+        Log.d("EvidentApp", "Populating Snippet " + snippet.getId() + " from " + snippet.getPath());
         String correct = null, incorrect = null, reason, line;
         boolean isCorrect = false;
         try {
@@ -112,7 +112,7 @@ public class TeXSourceParser extends SourceParser {
         StringBuilder tex = new StringBuilder();
         String line;
         Pattern imagePattern = Pattern.compile("includegraphics\\[scale=(.*)\\]\\{(.*)\\}");
-        boolean inCenterMode = false;
+        boolean switchToMathMode = false;
         tex.append("%text\n");
         while ((line = br.readLine()) != null) {
             line = line.trim();
@@ -126,14 +126,14 @@ public class TeXSourceParser extends SourceParser {
             Matcher matcher = imagePattern.matcher(line);
             if (matcher.find()) {
                 tex.append("\n%\n"); // end text-mode
-                if (inCenterMode)
+                if (switchToMathMode)
                     tex.append("\\begin{align}\n");
                 line = line.replace(matcher.group(1), String.valueOf(Float.parseFloat(matcher.group(1))*3));
                 line = line.replace(matcher.group(2), path + "/" + matcher.group(2));
                 tex.append(line);
-                if (inCenterMode) {
+                if (switchToMathMode) {
                     tex.append("\n\\end{align}\n");
-                    inCenterMode = false;
+                    switchToMathMode = false;
                 } else
                     tex.append("\\\\\n");
                 continue;
@@ -141,16 +141,16 @@ public class TeXSourceParser extends SourceParser {
 
             if (line.startsWith("\\begin")) {
                 if (line.startsWith("\\begin{itemize}")) {
-                    inCenterMode = false;
+                    switchToMathMode = false;
                     continue;
                 } else if (line.startsWith("\\begin{center}")) {
-                    inCenterMode = true;
+                    switchToMathMode = true;
                     continue;
                 }
 
                 if (line.startsWith("\\begin{align}")) {
                     tex.append("\n%\n"); // end text-mode
-                } else if (inCenterMode) {
+                } else if (switchToMathMode) {
                     tex.append("\n%\n"); // end text-mode
                     tex.append("\\begin{align}\n");
                 }
@@ -160,9 +160,9 @@ public class TeXSourceParser extends SourceParser {
                     continue;
 
                 if (line.startsWith("\\end{center}")) {
-                    if (inCenterMode) {
+                    if (switchToMathMode) {
                         line = line.replace("\\end{center}", "\\end{align}");
-                        inCenterMode = false;
+                        switchToMathMode = false;
                     } else {
                         continue;
                     }

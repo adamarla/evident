@@ -1,6 +1,7 @@
 package com.gradians.evident.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +44,18 @@ public class SelectChapter extends AppCompatActivity {
         new Sources(this).sync();
     }
 
+    public ProgressDialog getProgressDialog() {
+        mPd = new ProgressDialog(this);
+        mPd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mPd.setCancelable(false);
+        mPd.setTitle("Syncing...");
+        mPd.setMessage("Please wait...");
+        mPd.setIndeterminate(true);
+        mPd.show();
+        return mPd;
+    }
+
     private ChapterList chapterList;
+    private ProgressDialog mPd ;
 
 }
