@@ -1,48 +1,32 @@
 package com.gradians.evident.gui;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.JsonReader;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.gradians.evident.EvidentApp;
-import com.gradians.evident.R;
+
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.gradians.evident.dom.Asset;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
 import com.gradians.evident.dom.Snippet;
+
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.async.parser.JSONArrayParser;
 import com.koushikdutta.ion.Ion;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by abhinavc on 2/6/15.
@@ -64,9 +48,9 @@ public class ChapterList {
 
     public HashMap<Integer, Chapter> chapters;
 
-    public void loadCatalog(String idType, AssetManager amgr) {
+    public void loadCatalog(String idType, AssetManager assetManager) {
         try {
-            InputStream json = amgr.open("catalog/" + idType + ".json");
+            InputStream json = assetManager.open("catalog/" + idType + ".json");
             JsonReader reader = new JsonReader(new InputStreamReader(json));
             reader.beginArray();
             while (reader.hasNext()) {
@@ -95,14 +79,18 @@ public class ChapterList {
         JsonArray array = null;
         try {
             File json = new File(caller.getExternalFilesDir(null), "assets.json");
-            BufferedReader reader = new BufferedReader(new FileReader(json));
-            array = new JsonParser().parse(reader).getAsJsonArray();
-        } catch (Exception e) { }
+            if (json.exists()) {
+                JsonReader reader = new JsonReader(new FileReader(json));
+                JsonParser parser = new JsonParser();
+                array = parser.parse(reader).getAsJsonArray();
+            }
+        } catch (Exception e) {
+            Log.e("EvidentApp", "Error reading assets.json " + e.getMessage());
+        }
 
         int highestId = 0;
-        if (array != null) {
-            highestId = parseResult(array, 0);
-        }
+        if (array != null) highestId = parseResult(array, 0);
+
         final int last = highestId;
         Log.d("EvidentApp", "download started (last = " + last + ")");
         Ion.with(caller)
@@ -112,9 +100,17 @@ public class ChapterList {
 
                     @Override
                     public void onCompleted(Exception e, JsonArray jsonArray) {
-                        int newHighestId = parseResult(jsonArray, last);
-                        writeResults();
-                        Log.d("EvidentApp", "download completed (last = " + newHighestId + ")");
+                        if (e == null) {
+                            int newHighestId = parseResult(jsonArray, last);
+                            Log.d("EvidentApp", "download completed (last = " + newHighestId + ")");
+                            try {
+                                writeResults(caller);
+                            } catch (Exception ex) {
+                                Log.e("EvidentApp", "Error serializing assets.json " + ex.getMessage());
+                            }
+                        } else {
+                            Log.e("EvidentApp", "Error retrieving assets.json " + e.getMessage());
+                        }
                     }
                 });
     }
@@ -145,8 +141,25 @@ public class ChapterList {
         return highestId;
     }
 
-    private void writeResults() {
+    private void writeResults(Activity caller) throws Exception {
+        File json = new File(caller.getExternalFilesDir(null), "assets.json");
+        JsonWriter writer = new JsonWriter(new FileWriter(json));
 
+        writer.beginArray();
+        for (Chapter chapter : chapters.values()) {
+            for (Asset asset: chapter.getAllAssets()) {
+                int assetType = asset.getPath().contains("skills") ? 4 :
+                        (asset.getPath().contains("snippets") ? 2 : 1) ;
+                writer.beginObject();
+                writer.name("id").value(asset.getId());
+                writer.name("chapter").value(chapter.id);
+                writer.name("path").value(asset.getPath());
+                writer.name("type").value(assetType);
+                writer.endObject();
+            }
+        }
+        writer.endArray();
+        writer.close();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.gradians.evident.dom;
 
 import android.content.Context;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,6 +33,14 @@ public class Chapter implements Comparable<Chapter> {
             while (!blanks.empty())
                 list.remove(blanks.pop());
         }
+    }
+
+    public Asset[] getAllAssets() {
+        ArrayList<Asset> assets = new ArrayList<>();
+        assets.addAll(skills);
+        assets.addAll(snippets);
+        assets.addAll(questions);
+        return assets.toArray(new Asset[assets.size()]);
     }
 
     public void addSkill(Skill skill) {
