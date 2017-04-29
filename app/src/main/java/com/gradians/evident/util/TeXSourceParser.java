@@ -6,8 +6,10 @@ import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
 import com.gradians.evident.dom.Snippet;
 import com.gradians.evident.dom.Step;
+import com.himamis.retex.renderer.share.platform.geom.Line2D;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
@@ -51,67 +53,7 @@ public class TeXSourceParser extends SourceParser {
 
             while (!br.readLine().trim().startsWith("\\reason")) {}
 
-            Pattern imagePattern = Pattern.compile("includegraphics\\[.*\\]\\{(.*)\\}");
-            boolean inCenterMode = false;
-            StringBuilder studyNote = new StringBuilder();
-            studyNote.append("%text\n");
-            while ((line = br.readLine().trim()) != null) {
-                if (line.startsWith("%text") || line.equals("%"))
-                    continue;
-
-                Matcher matcher = imagePattern.matcher(line);
-                if (matcher.find()) {
-                    line = line.replace(matcher.group(1), skill.getPath() + "/" + matcher.group(1));
-                    line = line.replace("0.33", "1.0");
-                    studyNote.append("\n").append(line);
-                    continue;
-                }
-
-                if (line.trim().startsWith("\\begin")) {
-                    if (line.startsWith("\\begin{itemize}")) {
-                        inCenterMode = false;
-                        continue;
-                    } else if (line.trim().startsWith("\\begin{center}")) {
-                        inCenterMode = true;
-                        continue;
-                    }
-
-                    if (line.trim().startsWith("\\begin{align}")) {
-                        studyNote.append("\n%\n"); // end text-mode
-                    } else if (inCenterMode) {
-                        studyNote.append("\n%\n"); // end text-mode
-                        studyNote.append("\\begin{align}\n");
-                    }
-                    studyNote.append(line).append("\n");
-                } else if (line.trim().startsWith("\\end")) {
-                    if (line.trim().startsWith("\\end{itemize}"))
-                        continue;
-
-                    if (line.trim().startsWith("\\end{center}")) {
-                        if (inCenterMode) {
-                            line = line.replace("\\end{center}", "\\end{align}");
-                            inCenterMode = false;
-                        } else {
-                            continue;
-                        }
-                    }
-
-                    if (line.trim().startsWith("\\end{align}")) {
-                        studyNote.append("\n").append(line).append("\n"); // end math-mode
-                        studyNote.append("%text\n"); // resume text-mode
-                    } else if (line.trim().startsWith("\\end{skill}")) {
-                        studyNote.append("\n%\n");
-                        break;
-                    } else {
-                        studyNote.append("\n").append(line);
-                    }
-                } else if (line.trim().startsWith("\\[")) {
-                    studyNote.append("\n").append(line).append("\n");
-                } else if (!line.trim().isEmpty()) {
-                    studyNote.append("\n").append(line);
-                }
-            }
-            skill.studyNote = toPureTeX(studyNote.toString());
+            skill.studyNote = extractTeX(skill.getPath(), "\\end{skill}");
         } catch (Exception e) {
             Log.d("EvidentApp", skill.studyNote);
             Log.e("EvidentApp", "Error populating Skill " + e.getMessage());
@@ -120,7 +62,32 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populateSnippet(Snippet snippet) {
-        snippet.step = new Step("\\text{Correct}", null, "\\text{Reason}");
+        Log.d("EvidentApp", "Populating Snippet " + snippet.getId());
+        String correct = null, incorrect = null, reason, line;
+        boolean isCorrect = false;
+        try {
+            StringBuilder newcommands = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("\\newcommand")) {
+                    newcommands.append(line).append("\n");
+                } else if (line.equals("\\incorrect") || line.equals("\\correct")) {
+                    isCorrect = line.equals("\\correct");
+                    break;
+                }
+            }
+            Log.d("EvidentApp", newcommands.toString());
+
+            String context = extractTeX(snippet.getPath(), "\\reason");
+            if (isCorrect) correct = newcommands.append(context).toString();
+            else incorrect = newcommands.append(context).toString();
+
+            reason = newcommands.append(extractTeX(snippet.getPath(), "\\end{snippet}")).toString();
+            snippet.step = new Step(correct, incorrect, reason);
+        } catch (Exception e) {
+            Log.d("EvidentApp", snippet.step.toString());
+            Log.e("EvidentApp", "Error populating Snippet " + e.getMessage());
+        }
     }
 
     @Override
@@ -142,5 +109,80 @@ public class TeXSourceParser extends SourceParser {
         return super.toPureTeX(tex);
     }
 
-    BufferedReader br;
+    private String extractTeX(String path, String exitCommand) throws IOException {
+        StringBuilder tex = new StringBuilder();
+        String line;
+        Pattern imagePattern = Pattern.compile("includegraphics\\[scale=(.*)\\]\\{(.*)\\}");
+        boolean inCenterMode = false;
+        tex.append("%text\n");
+        while ((line = br.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith("%text") || line.equals("%"))
+                continue;
+            else if (line.startsWith(exitCommand)) {
+                tex.append("\n%\n");
+                break;
+            }
+
+            Matcher matcher = imagePattern.matcher(line);
+            if (matcher.find()) {
+                tex.append("\n%\n"); // end text-mode
+                if (inCenterMode)
+                    tex.append("\\begin{align}\n");
+                line = line.replace(matcher.group(1), String.valueOf(Float.parseFloat(matcher.group(1))*3));
+                line = line.replace(matcher.group(2), path + "/" + matcher.group(2));
+                tex.append(line);
+                if (inCenterMode) {
+                    tex.append("\n\\end{align}\n");
+                    inCenterMode = false;
+                } else
+                    tex.append("\\\\\n");
+                continue;
+            }
+
+            if (line.startsWith("\\begin")) {
+                if (line.startsWith("\\begin{itemize}")) {
+                    inCenterMode = false;
+                    continue;
+                } else if (line.startsWith("\\begin{center}")) {
+                    inCenterMode = true;
+                    continue;
+                }
+
+                if (line.startsWith("\\begin{align}")) {
+                    tex.append("\n%\n"); // end text-mode
+                } else if (inCenterMode) {
+                    tex.append("\n%\n"); // end text-mode
+                    tex.append("\\begin{align}\n");
+                }
+                tex.append(line).append("\n");
+            } else if (line.startsWith("\\end")) {
+                if (line.startsWith("\\end{itemize}"))
+                    continue;
+
+                if (line.startsWith("\\end{center}")) {
+                    if (inCenterMode) {
+                        line = line.replace("\\end{center}", "\\end{align}");
+                        inCenterMode = false;
+                    } else {
+                        continue;
+                    }
+                }
+
+                if (line.startsWith("\\end{align}")) {
+                    tex.append("\n").append(line).append("\n"); // end math-mode
+                    tex.append("%text\n"); // resume text-mode
+                } else {
+                    tex.append("\n").append(line);
+                }
+            } else if (line.startsWith("\\[")) {
+                tex.append("\n").append(line).append("\n");
+            } else if (!line.isEmpty()) {
+                tex.append("\n").append(line);
+            }
+        }
+        return toPureTeX(tex.toString());
+    }
+
+    private BufferedReader br;
 }

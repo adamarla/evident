@@ -29,7 +29,7 @@ public class InChapter extends AppCompatActivity {
 
         int chapterId = getIntent().getIntExtra("chapterId", 0);
 
-        Chapter chapter = EvidentApp.app.chapters.get(chapterId);
+        Chapter chapter = EvidentApp.app.chapterList.getChapter(chapterId);
         chapter.load(this);
 
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);

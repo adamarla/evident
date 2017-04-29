@@ -22,22 +22,6 @@ import java.util.Map;
 
 public class TeXMacros {
 
-    public static void init(Context context) {
-        AssetManager amgr = context.getAssets();
-        FactoryProvider.INSTANCE = new FactoryProviderAndroid(context);
-        Log.d("EvidentApp", "TeXMacros: static block initialized");
-
-        Map<String, String> map = TeXFormula.predefinedTeXFormulasAsString;
-        for (String key : map.keySet()) TeXFormula.get(key);
-
-        try {
-            InputStream istream = amgr.open("tex/Macros.xml");
-            TeXFormula.addPredefinedCommands(istream);
-        } catch (Exception e) {
-            Log.e("EvidentApp", e.getMessage());
-        }
-    }
-
     public Atom dd(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula(String.format("\\dfrac{d}{d%s}%s", args[2], args[1])).root;
     }
@@ -81,6 +65,26 @@ public class TeXMacros {
 
     public Atom dydx(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula("\\dfrac{dy}{dx}").root;
+    }
+
+    public Atom ddx(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("\\dfrac{d}{dx}").root;
+    }
+
+    public Atom prob(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("P\\left(%s\\right)", args[1])).root;
+    }
+
+    public Atom condp(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("P\\left(%s\\,\\vert\\,%s\\right)", args[1], args[2])).root;
+    }
+
+    public Atom combi(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\,^{%s}C_{%s}", args[1], args[2])).root;
+    }
+
+    public Atom permi(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\,^{%s}P_{%s}", args[1], args[2])).root;
     }
 
 }

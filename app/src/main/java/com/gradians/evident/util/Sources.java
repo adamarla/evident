@@ -22,19 +22,26 @@ import java.io.IOException;
 public class Sources {
 
     public Sources(Context context) {
-        File vault = init(context);
+        vault = init(context);
+    }
+
+    public void sync() {
         try {
             if (vault.exists()) {
                 gitPull(vault);
             } else {
                 gitClone(vault);
             }
+        } catch (NullPointerException npe) {
+            Log.e("EvidentApp", "Error syncing: NullPointerException");
         } catch (Exception e) {
-            Log.d("EvidentApp", "Likely NPE " + e.getClass().toString());
+            Log.e("EvidentApp", "Error syncing: " + e.getMessage());
         }
     }
 
-    public void gitPull(File vault) {
+    File vault;
+
+    private void gitPull(File vault) {
         Repository repo = null;
         try {
             repo = new FileRepositoryBuilder()
@@ -65,7 +72,7 @@ public class Sources {
         task.execute();
     }
 
-    public void gitClone(File vault) {
+    private void gitClone(File vault) {
         final CloneCommand cloneCommand = Git.cloneRepository()
                 .setURI("https://github.com/adamarla/alt-bank.git")
                 .setDirectory(vault);
