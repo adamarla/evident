@@ -38,7 +38,6 @@ public class XMLTeXSourceParser extends TeXSourceParser {
         cards = new HashMap<>();
         try {
             String newCommands = extractNewCommands();
-            Log.d("EvidentApp", newCommands);
 
             int counter = 2;
             while (br.readLine() != null) {
