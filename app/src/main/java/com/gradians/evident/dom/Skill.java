@@ -63,7 +63,7 @@ public class Skill extends Asset implements ICard {
 
     @Override
     protected void extract(SourceParser parser) throws Exception {
-        parser.populateSkill(this);
+        parser.populate(this);
     }
 
     public String title, studyNote;

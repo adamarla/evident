@@ -23,7 +23,7 @@ public class Snippet extends Asset {
 
     @Override
     protected void extract(SourceParser parser) throws Exception {
-        parser.populateSnippet(this);
+        parser.populate(this);
     }
 
     public Step step;

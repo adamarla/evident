@@ -26,7 +26,7 @@ public class Question extends Asset {
 
     @Override
     protected void extract(SourceParser parser) throws Exception {
-        parser.populateQuestion(this);
+        parser.populate(this);
     }
 
     public Step statement;

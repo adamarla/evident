@@ -9,6 +9,7 @@ import com.gradians.evident.gui.ICard;
 import com.gradians.evident.tex.SourceParser;
 import com.gradians.evident.tex.TeXSourceParser;
 import com.gradians.evident.tex.XMLSourceParser;
+import com.gradians.evident.tex.XMLTeXSourceParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,20 +38,20 @@ public abstract class Asset implements Parcelable {
 
     public boolean load(Context context) {
         File dir = new File(context.getExternalFilesDir(null), "vault/" + path);
-        File source = new File(dir, "source.tex");
-        if (!source.exists()) source = new File(dir, "source.xml");
-        if (!source.exists()) return false;
+        File texSource = new File(dir, "source.tex");
+        File xmlSource = new File(dir, "source.xml");
+        if (!texSource.exists() && !xmlSource.exists()) return false;
 
         try {
-            InputStream is = new FileInputStream(source);
             SourceParser parser;
-            if (source.getName().endsWith("xml")) {
-                parser = new XMLSourceParser(is);
+            if (!texSource.exists() && xmlSource.exists()) {
+                parser = new XMLSourceParser(xmlSource);
+            } else if (texSource.exists() && !xmlSource.exists()) {
+                parser = new TeXSourceParser(texSource);
             } else {
-                parser = new TeXSourceParser(is);
+                parser = new XMLTeXSourceParser(texSource, xmlSource);
             }
             extract(parser);
-            is.close();
             return true;
         } catch (Exception e) {
             Log.e("EvidentApp", "Error loading " + e.getMessage());

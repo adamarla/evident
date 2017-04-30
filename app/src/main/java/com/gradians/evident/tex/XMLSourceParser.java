@@ -10,7 +10,8 @@ import com.gradians.evident.dom.Step;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 /**
@@ -19,19 +20,19 @@ import java.util.ArrayList;
 
 public class XMLSourceParser extends SourceParser {
 
-    public XMLSourceParser(InputStream is) {
-        super(is);
+    public XMLSourceParser(File source) {
         parser = Xml.newPullParser();
         try {
+            fis = new FileInputStream(source);
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
+            parser.setInput(fis, null);
         } catch (Exception e) {
             Log.e("EvidentApp", "XMLSourceParser Error");
         }
     }
 
     @Override
-    public void populateSkill(Skill skill) {
+    public void populate(Skill skill) {
         boolean onFrontFace = true;
         try {
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
@@ -55,10 +56,11 @@ public class XMLSourceParser extends SourceParser {
         } catch (Exception e ) {
             Log.d("EvidentApp", "Error populating Skill " + e.getMessage());
         }
+        closeStreams();
     }
 
     @Override
-    public void populateSnippet(Snippet snippet) {
+    public void populate(Snippet snippet) {
         String correct = null, incorrect = null, reason;
         try {
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
@@ -86,11 +88,11 @@ public class XMLSourceParser extends SourceParser {
         } catch (Exception e ) {
             Log.d("EvidentApp", "Error populating Snippet " + e.getMessage());
         }
-
+        closeStreams();
     }
 
     @Override
-    public void populateQuestion(Question question) {
+    public void populate(Question question) {
         boolean inStep = false, outStep = false;
         ArrayList<Step> _steps = new ArrayList<>();
         String correct = null, incorrect = null, reason;
@@ -137,7 +139,18 @@ public class XMLSourceParser extends SourceParser {
         } catch (Exception e ) {
             Log.d("EvidentApp", "Error populating Question " + e.getMessage());
         }
+        closeStreams();
     }
 
-    XmlPullParser parser;
+    @Override
+    protected void closeStreams() {
+        try {
+            fis.close();
+        } catch (Exception e) {
+            Log.d("EvidentApp", "Error closing stream " + e.getMessage());
+        }
+    }
+
+    private FileInputStream fis;
+    private XmlPullParser parser;
 }

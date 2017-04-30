@@ -8,9 +8,13 @@ import com.gradians.evident.dom.Snippet;
 import com.gradians.evident.dom.Step;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,14 +24,19 @@ import java.util.regex.Pattern;
 
 public class TeXSourceParser extends SourceParser {
 
-    public TeXSourceParser(InputStream is) {
-        super(is);
-        br = new BufferedReader(new InputStreamReader(is));
+    public TeXSourceParser(File source) {
+        try {
+            FileInputStream fis = new FileInputStream(source);
+            br = new BufferedReader(new InputStreamReader(fis));
+        } catch (FileNotFoundException e) {
+            Log.e("EvidentApp", "TeXSourceParser Error");
+        }
     }
 
     @Override
-    public void populateSkill(Skill skill) {
+    public void populate(Skill skill) {
         Log.d("EvidentApp", "Populating Skill " + skill.getId() + " from " + skill.getPath());
+        this.path = skill.getPath();
         String line;
         try {
             Pattern titlePattern = Pattern.compile("textcolor\\{blue\\}\\{(.*)\\}");
@@ -52,48 +61,108 @@ public class TeXSourceParser extends SourceParser {
 
             while (!br.readLine().trim().startsWith("\\reason")) {}
 
-            skill.studyNote = extractTeX(skill.getPath(), "\\end{skill}");
+            skill.studyNote = extractTeX("\\end{skill}");
         } catch (Exception e) {
             Log.d("EvidentApp", skill.studyNote);
             Log.e("EvidentApp", "Error populating Skill " + e.getMessage());
         }
+        closeStreams();
     }
 
     @Override
-    public void populateSnippet(Snippet snippet) {
+    public void populate(Snippet snippet) {
         Log.d("EvidentApp", "Populating Snippet " + snippet.getId() + " from " + snippet.getPath());
+        this.path = snippet.getPath();
         String correct = null, incorrect = null, reason, line;
         boolean isCorrect = false;
         try {
-            StringBuilder newcommands = new StringBuilder();
+            String newCommands = extractNewCommands();
+
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                if (line.startsWith("\\newcommand")) {
-                    newcommands.append(line).append("\n");
-                } else if (line.equals("\\incorrect") || line.equals("\\correct")) {
+                if (line.equals("\\incorrect") || line.equals("\\correct")) {
                     isCorrect = line.equals("\\correct");
                     break;
                 }
             }
-            Log.d("EvidentApp", newcommands.toString());
+            Log.d("EvidentApp", newCommands.toString());
 
-            String context = extractTeX(snippet.getPath(), "\\reason");
-            if (isCorrect) correct = newcommands.append(context).toString();
-            else incorrect = newcommands.append(context).toString();
+            String context = extractTeX("\\reason");
+            if (isCorrect) correct = newCommands + context.toString();
+            else incorrect = newCommands + context.toString();
 
-            reason = newcommands.append(extractTeX(snippet.getPath(), "\\end{snippet}")).toString();
+            reason = newCommands + extractTeX("\\end{snippet}").toString();
             snippet.step = new Step(correct, incorrect, reason);
         } catch (Exception e) {
             Log.d("EvidentApp", snippet.step.toString());
             Log.e("EvidentApp", "Error populating Snippet " + e.getMessage());
         }
+        closeStreams();
     }
 
     @Override
-    public void populateQuestion(Question question) {
-        question.statement = new Step("\\text{Statement is thus}", null, null);
-        question.steps = new Step[1];
-        question.steps[0] = new Step("\\text{Correct}", null, "\text{Reason}");
+    public void populate(Question question) {
+        Log.d("EvidentApp", "Populating Question " + question.getId() + " from " + question.getPath());
+        this.path = question.getPath();
+        try {
+            String newCommands = extractNewCommands();
+            Log.d("EvidentApp", newCommands.toString());
+
+            jumpTo("\\statement");
+            String statementTex = newCommands + extractTeX("\\begin{step}").toString();
+            Step statement = new Step(statementTex, null, null);
+            statement.steps = true;
+            statement.answerable = false;
+            question.statement = statement;
+
+            ArrayList<Step> _steps = new ArrayList<>();
+            while (br.readLine() != null) {
+                jumpTo("\\begin{options}");
+                // get both correct and incorrect options, if any
+                String tex = extractTeX("\\end{options}");
+
+                // separate out correct and incorrect options... if any
+                StringBuilder option = new StringBuilder();
+                boolean correctOption = false;
+                String correct = null, incorrect = null;
+                for (String s: tex.split("\n")) {
+                    if (s.trim().contains("\\correct")) {
+                        correctOption = true;
+                    } else if (s.trim().contains("\\incorrect")) {
+                        if (option.length() > 0) {
+                            correct = option.toString();
+                            option = new StringBuilder();
+                        }
+                        correctOption = false;
+                    } else {
+                        option.append(s);
+                    }
+                }
+                if (option.length() > 0) {
+                    if (correctOption)
+                        correct = newCommands + option.toString().toString();
+                    else
+                        incorrect = newCommands + option.toString().toString();
+                }
+
+                jumpTo("\\reason");
+                String reason = newCommands + extractTeX("\\end{step}").toString();
+                _steps.add(new Step(correct, incorrect, reason));
+            }
+            question.steps = _steps.toArray(new Step[_steps.size()]);
+        } catch (Exception e) {
+            Log.e("EvidentApp", "Error populating Question " + e.getMessage());
+        }
+        closeStreams();
+    }
+
+    @Override
+    protected void closeStreams() {
+        try {
+            br.close();
+        } catch (IOException e) {
+            Log.e("EvidentApp", "Error closing stream " + e.getMessage());
+        }
     }
 
     @Override
@@ -108,18 +177,43 @@ public class TeXSourceParser extends SourceParser {
         return super.toPureTeX(tex);
     }
 
-    private String extractTeX(String path, String exitCommand) throws IOException {
+    private String path;
+    protected BufferedReader br;
+
+    protected void jumpTo(String locator) throws IOException {
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (line.trim().startsWith(locator))
+                break;
+        }
+    }
+
+    protected String extractNewCommands() throws IOException {
+        StringBuilder newcommands = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith("\\newcommand")) {
+                newcommands.append(line).append("\n");
+            } else if (line.equals("\\begin{document}")) {
+                break;
+            }
+        }
+        return newcommands.toString();
+    }
+
+    protected String extractTeX(String exitCommand) throws IOException {
         StringBuilder tex = new StringBuilder();
         String line;
         Pattern imagePattern = Pattern.compile("includegraphics\\[scale=(.*)\\]\\{(.*)\\}");
         boolean switchToMathMode = false;
-        tex.append("%text\n");
+        tex.append("%text\n"); // start text-mode
         while ((line = br.readLine()) != null) {
             line = line.trim();
             if (line.startsWith("%text") || line.equals("%"))
                 continue;
             else if (line.startsWith(exitCommand)) {
-                tex.append("\n%\n");
+                tex.append("\n%\n"); // end text-mode
                 break;
             }
 
@@ -171,6 +265,9 @@ public class TeXSourceParser extends SourceParser {
                 if (line.startsWith("\\end{align}")) {
                     tex.append("\n").append(line).append("\n"); // end math-mode
                     tex.append("%text\n"); // resume text-mode
+                } else if (line.startsWith("\\end{document}")) {
+                    tex.append("\n%\n"); // end text-mode
+                    break;
                 } else {
                     tex.append("\n").append(line);
                 }
@@ -183,5 +280,4 @@ public class TeXSourceParser extends SourceParser {
         return toPureTeX(tex.toString());
     }
 
-    private BufferedReader br;
 }

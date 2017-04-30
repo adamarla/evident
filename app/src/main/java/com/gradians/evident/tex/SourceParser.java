@@ -12,13 +12,10 @@ import java.io.InputStream;
 
 public abstract class SourceParser {
 
-    public SourceParser(InputStream is) {
-        this.inputStream = is;
-    }
-
-    public abstract void populateSkill(Skill skill);
-    public abstract void populateSnippet(Snippet snippet);
-    public abstract void populateQuestion(Question question);
+    public abstract void populate(Skill skill);
+    public abstract void populate(Snippet snippet);
+    public abstract void populate(Question question);
+    protected abstract void closeStreams();
 
     protected String toPureTeX(String tex) {
         String[] lines = tex.split("\n");
@@ -42,6 +39,4 @@ public abstract class SourceParser {
         }
         return sb.toString();
     }
-
-    InputStream inputStream;
 }
