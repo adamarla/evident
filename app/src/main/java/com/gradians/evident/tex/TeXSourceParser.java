@@ -59,7 +59,7 @@ public class TeXSourceParser extends SourceParser {
             title.append("%\n");
             skill.title = toPureTeX(title.toString());
 
-            while (!br.readLine().trim().startsWith("\\reason")) {}
+            jumpTo("\\reason");
 
             skill.studyNote = extractTeX("\\end{skill}");
         } catch (Exception e) {
@@ -85,13 +85,12 @@ public class TeXSourceParser extends SourceParser {
                     break;
                 }
             }
-            Log.d("EvidentApp", newCommands.toString());
 
             String context = extractTeX("\\reason");
-            if (isCorrect) correct = newCommands + context.toString();
-            else incorrect = newCommands + context.toString();
+            if (isCorrect) correct = newCommands + context;
+            else incorrect = newCommands + context;
 
-            reason = newCommands + extractTeX("\\end{snippet}").toString();
+            reason = newCommands + extractTeX("\\end{snippet}");
             snippet.step = new Step(correct, incorrect, reason);
         } catch (Exception e) {
             Log.d("EvidentApp", snippet.step.toString());
@@ -106,10 +105,9 @@ public class TeXSourceParser extends SourceParser {
         this.path = question.getPath();
         try {
             String newCommands = extractNewCommands();
-            Log.d("EvidentApp", newCommands.toString());
 
             jumpTo("\\statement");
-            String statementTex = newCommands + extractTeX("\\begin{step}").toString();
+            String statementTex = newCommands + extractTeX("\\begin{step}");
             Step statement = new Step(statementTex, null, null);
             statement.steps = true;
             statement.answerable = false;
@@ -140,13 +138,13 @@ public class TeXSourceParser extends SourceParser {
                 }
                 if (option.length() > 0) {
                     if (correctOption)
-                        correct = newCommands + option.toString().toString();
+                        correct = newCommands + option;
                     else
-                        incorrect = newCommands + option.toString().toString();
+                        incorrect = newCommands + option;
                 }
 
                 jumpTo("\\reason");
-                String reason = newCommands + extractTeX("\\end{step}").toString();
+                String reason = newCommands + extractTeX("\\end{step}");
                 _steps.add(new Step(correct, incorrect, reason));
             }
             question.steps = _steps.toArray(new Step[_steps.size()]);
@@ -233,7 +231,7 @@ public class TeXSourceParser extends SourceParser {
                 continue;
             }
 
-            if (line.startsWith("\\begin")) {
+            if (line.contains("\\begin")) {
                 if (line.startsWith("\\begin{itemize}")) {
                     switchToMathMode = false;
                     continue;
@@ -242,14 +240,15 @@ public class TeXSourceParser extends SourceParser {
                     continue;
                 }
 
-                if (line.startsWith("\\begin{align}")) {
+                if (line.startsWith("\\begin{align}") ||
+                    line.contains("\\begin{cases}")) {
                     tex.append("\n%\n"); // end text-mode
                 } else if (switchToMathMode) {
                     tex.append("\n%\n"); // end text-mode
                     tex.append("\\begin{align}\n");
                 }
                 tex.append(line).append("\n");
-            } else if (line.startsWith("\\end")) {
+            } else if (line.contains("\\end")) {
                 if (line.startsWith("\\end{itemize}"))
                     continue;
 
@@ -262,7 +261,8 @@ public class TeXSourceParser extends SourceParser {
                     }
                 }
 
-                if (line.startsWith("\\end{align}")) {
+                if (line.startsWith("\\end{align}") ||
+                    line.contains("\\end{cases}")) {
                     tex.append("\n").append(line).append("\n"); // end math-mode
                     tex.append("%text\n"); // resume text-mode
                 } else if (line.startsWith("\\end{document}")) {

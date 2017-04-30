@@ -38,21 +38,22 @@ public class XMLTeXSourceParser extends TeXSourceParser {
         cards = new HashMap<>();
         try {
             String newCommands = extractNewCommands();
-            Log.d("EvidentApp", newCommands.toString());
+            Log.d("EvidentApp", newCommands);
 
             int counter = 2;
             while (br.readLine() != null) {
+                String tex;
                 if (question.statement == null) {
-                    String statementTex = newCommands + extractTeX("\\newcard").toString();
-                    Step statement = new Step(statementTex, null, null);
+                    tex = newCommands + extractTeX("\\newcard");
+                    Step statement = new Step(tex, null, null);
                     statement.steps = true;
                     statement.answerable = false;
                     question.statement = statement;
+                } else {
+                    tex = newCommands + extractTeX("\\newcard");
+                    cards.put(String.format("tex-%s.svg", counter), tex);
+                    counter++;
                 }
-
-                String tex = newCommands + extractTeX("\\newcard").toString();
-                cards.put(String.format("tex-%s.svg", counter), tex);
-                counter++;
             }
             question.steps = parseXmlSource();
         } catch (Exception e) {
