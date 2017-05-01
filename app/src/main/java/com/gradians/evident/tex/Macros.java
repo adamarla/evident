@@ -69,6 +69,11 @@ public class Macros {
         return new TeXFormula(String.format("P\\left(%s\\,\\vert\\,%s\\right)", args[1], args[2])).root;
     }
 
+    public Atom fcondp(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula(String.format("\\dfrac{\\condp{%s}{%s}\\cdot P\\left(%s\\right)}{P\\left(%s\\right)}",
+                args[1], args[2], args[1], args[2])).root;
+    }
+
     public Atom combi(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula(String.format("\\,^{%s}C_{%s}", args[1], args[2])).root;
     }

@@ -80,6 +80,16 @@
         <Return name="f" />
     </Command>
 
+    <Command name="fcondp" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.tex.Macros" />
+            <Argument type="String" value="fcondp" />
+            <!-- the command has 2 argument -->
+            <Argument type="float" value="2" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
     <Command name="combi" enabled="true">
         <CreateCommand name="f">
             <Argument type="String" value="com.gradians.evident.tex.Macros" />

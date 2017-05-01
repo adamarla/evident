@@ -61,7 +61,6 @@ public class TeXSourceParser extends SourceParser {
 
             jumpTo("\\reason");
             skill.studyNote = extractTeX("\\end{skill}");
-            Log.d("EvidentApp", skill.studyNote);
         } catch (Exception e) {
             Log.d("EvidentApp", skill.studyNote);
             Log.e("EvidentApp", "Error populating Skill " + e.getMessage());
@@ -168,7 +167,7 @@ public class TeXSourceParser extends SourceParser {
         tex = tex.replaceAll("\\\\item\\{(.*)\\}", " - $1");
         tex = tex.replaceAll("\\\\smallmath", "");
         tex = tex.replaceAll("\\\\underline", "\\\\underline\\\\text");
-        tex = tex.replaceAll("\\\\newline", "");
+        tex = tex.replaceAll("\\\\newline", "\n");
         tex = tex.replaceAll("\\\\toprule", "\\\\hline");
         tex = tex.replaceAll("midrule", "hline");
         tex = tex.replaceAll("\\\\bottomrule", "\\\\hline");
@@ -204,7 +203,7 @@ public class TeXSourceParser extends SourceParser {
         StringBuilder tex = new StringBuilder();
         String line;
         Pattern imagePattern = Pattern.compile("includegraphics\\[scale=(.*)\\]\\{(.*)\\}");
-        boolean switchToMathMode = false;
+        boolean autoLineBreak = true;
         tex.append("%text\n"); // start text-mode
         while ((line = br.readLine()) != null) {
             line = line.trim();
@@ -217,54 +216,40 @@ public class TeXSourceParser extends SourceParser {
 
             Matcher matcher = imagePattern.matcher(line);
             if (matcher.find()) {
-                tex.append("\n%\n"); // end text-mode
-                if (switchToMathMode)
-                    tex.append("\\begin{align}\n");
-                line = line.replace(matcher.group(1), String.valueOf(Float.parseFloat(matcher.group(1))*3));
+                line = line.replace(matcher.group(1),
+                        String.valueOf(Float.parseFloat(matcher.group(1))*3));
                 line = line.replace(matcher.group(2), path + "/" + matcher.group(2));
-                tex.append(line);
-                if (switchToMathMode) {
-                    tex.append("\n\\end{align}\n");
-                    switchToMathMode = false;
-                } else
-                    tex.append("\\\\\n");
-                continue;
             }
 
             if (line.contains("\\begin")) {
                 if (line.startsWith("\\begin{itemize}")) {
-                    switchToMathMode = false;
+                    autoLineBreak = false;
                     continue;
                 } else if (line.startsWith("\\begin{center}")) {
-                    switchToMathMode = true;
-                    continue;
+                    line = line.replace("\\begin{center}", "\\begin{align}");
                 }
 
                 if (line.startsWith("\\begin{align}") ||
                     line.contains("\\begin{cases}")) {
                     tex.append("\n%\n"); // end text-mode
-                } else if (switchToMathMode) {
-                    tex.append("\n%\n"); // end text-mode
-                    tex.append("\\begin{align}\n");
+                    autoLineBreak = false;
                 }
                 tex.append(line).append("\n");
             } else if (line.contains("\\end")) {
-                if (line.startsWith("\\end{itemize}"))
+                if (line.startsWith("\\end{itemize}")) {
+                    autoLineBreak = true;
                     continue;
+                }
 
                 if (line.startsWith("\\end{center}")) {
-                    if (switchToMathMode) {
-                        line = line.replace("\\end{center}", "\\end{align}");
-                        switchToMathMode = false;
-                    } else {
-                        continue;
-                    }
+                    line = line.replace("\\end{center}", "\\end{align}");
                 }
 
                 if (line.startsWith("\\end{align}") ||
                     line.contains("\\end{cases}")) {
                     tex.append("\n").append(line).append("\n"); // end math-mode
                     tex.append("%text\n"); // resume text-mode
+                    autoLineBreak = true;
                 } else if (line.startsWith("\\end{document}")) {
                     tex.append("\n%\n"); // end text-mode
                     break;
@@ -274,7 +259,7 @@ public class TeXSourceParser extends SourceParser {
             } else if (line.startsWith("\\[")) {
                 tex.append("\n").append(line).append("\n");
             } else if (!line.isEmpty()) {
-                tex.append("\n").append(line);
+                tex.append(autoLineBreak ? " " : "\n").append(line);
             }
         }
         return toPureTeX(tex.toString());
