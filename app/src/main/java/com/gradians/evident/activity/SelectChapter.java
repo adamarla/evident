@@ -48,6 +48,8 @@ public class SelectChapter extends AppCompatActivity {
         mPd = new ProgressDialog(this);
         mPd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mPd.setCancelable(false);
+        mPd.setProgressNumberFormat(null);
+        mPd.setProgressPercentFormat(null);
         mPd.setTitle("Syncing...");
         mPd.setMessage("Please wait...");
         mPd.setIndeterminate(true);

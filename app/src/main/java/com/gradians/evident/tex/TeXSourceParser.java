@@ -60,8 +60,8 @@ public class TeXSourceParser extends SourceParser {
             skill.title = toPureTeX(title.toString());
 
             jumpTo("\\reason");
-
             skill.studyNote = extractTeX("\\end{skill}");
+            Log.d("EvidentApp", skill.studyNote);
         } catch (Exception e) {
             Log.d("EvidentApp", skill.studyNote);
             Log.e("EvidentApp", "Error populating Skill " + e.getMessage());
