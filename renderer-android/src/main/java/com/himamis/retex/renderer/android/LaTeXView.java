@@ -19,7 +19,7 @@ import com.himamis.retex.renderer.share.platform.FactoryProvider;
 import com.himamis.retex.renderer.share.platform.graphics.Color;
 import com.himamis.retex.renderer.share.platform.graphics.Insets;
 
-import static com.himamis.retex.renderer.share.TeXConstants.ALIGN_LEFT;
+import static com.himamis.retex.renderer.share.TeXFormula.SANSSERIF;
 import static com.himamis.retex.renderer.share.TeXConstants.STYLE_DISPLAY;
 import static com.himamis.retex.renderer.share.TeXConstants.UNIT_PIXEL;
 
@@ -188,7 +188,7 @@ public class LaTeXView extends View {
             mTexIconBuilder = mFormula.new TeXIconBuilder();
         }
         if (mTexIcon == null) {
-            mTexIcon = mFormula.createTeXIcon(STYLE_DISPLAY, fontSize, UNIT_PIXEL, lineWidth,
+            mTexIcon = mFormula.createTeXIcon(STYLE_DISPLAY, fontSize, SANSSERIF, UNIT_PIXEL, lineWidth,
                     TeXConstants.ALIGN_LEFT, UNIT_PIXEL, lineSpacing);
         }
         mTexIcon.setInsets(new Insets(
