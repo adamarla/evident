@@ -114,7 +114,7 @@ public class TeXSourceParser extends SourceParser {
 
             ArrayList<Step> _steps = new ArrayList<>();
             while (br.readLine() != null) {
-                jumpTo("\\begin{options}");
+                if (jumpTo("\\begin{options}") == null) break;
                 // get both correct and incorrect options, if any
                 String tex = extractTeX("\\end{options}");
 
@@ -177,12 +177,13 @@ public class TeXSourceParser extends SourceParser {
     private String path;
     protected BufferedReader br;
 
-    protected void jumpTo(String locator) throws IOException {
+    protected String jumpTo(String locator) throws IOException {
         String line;
         while ((line = br.readLine()) != null) {
             if (line.trim().startsWith(locator))
                 break;
         }
+        return line;
     }
 
     protected String extractNewCommands() throws IOException {
