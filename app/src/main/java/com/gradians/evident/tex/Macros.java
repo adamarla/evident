@@ -45,6 +45,18 @@ public class Macros {
         return new TeXFormula(format).root;
     }
 
+    public Atom xaxis(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("x-\\text{axis}").root;
+    }
+
+    public Atom yaxis(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("y-\\text{axis}").root;
+    }
+
+    public Atom zaxis(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("z-\\text{axis}").root;
+    }
+
     public Atom ora(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula(String.format("\\overrightarrow{%s}", args[1])).root;
     }

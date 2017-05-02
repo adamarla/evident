@@ -20,6 +20,36 @@
         <Return name="f" />
     </Command>
 
+    <Command name="xaxis" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.tex.Macros" />
+            <Argument type="String" value="xaxis" />
+            <!-- the command ora has 0 argument -->
+            <Argument type="float" value="0" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
+    <Command name="yaxis" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.tex.Macros" />
+            <Argument type="String" value="yaxis" />
+            <!-- the command ora has 0 argument -->
+            <Argument type="float" value="0" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
+    <Command name="zaxis" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.tex.Macros" />
+            <Argument type="String" value="zaxis" />
+            <!-- the command ora has 0 argument -->
+            <Argument type="float" value="0" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
     <Command name="ora" enabled="true">
         <CreateCommand name="f">
             <Argument type="String" value="com.gradians.evident.tex.Macros" />
