@@ -88,11 +88,6 @@ public class CardList extends Fragment {
         return true;
     }
 
-    public void smoothScrollTo(int position) {
-        list.smoothScrollToPosition(position);
-        list.setSelection(position);
-    }
-
     public void enableButtonBar(boolean enable) {
         answerButtonBar.enable(enable);
     }
@@ -142,13 +137,8 @@ class CardListListener implements AdapterView.OnItemClickListener, View.OnClickL
             selectedView = (CardView)view;
             selectedView.select();
 
-            if (card.hasBeenAttempted()) {
-                /* move the flipped card to top of listView */
-                if (selectedView.rightSideUp) cardList.smoothScrollTo(position);
-                cardList.enableButtonBar(false);
-            } else {
-                cardList.enableButtonBar(true);
-            }
+            if (card.hasBeenAttempted()) cardList.enableButtonBar(false);
+            else cardList.enableButtonBar(true);
         }
     }
 

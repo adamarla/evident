@@ -165,6 +165,7 @@ public class TeXSourceParser extends SourceParser {
     @Override
     protected String toPureTeX(String tex) {
         tex = tex.replaceAll("\\\\item *\\{(.*)\\}", " - $1");
+        tex = tex.replaceAll("\\\\textbf\\{(.*)\\}", "\\\\textbf\\{$1 \\}");
         tex = tex.replaceAll("\\\\smallmath", "");
         tex = tex.replaceAll("\\\\underline", "\\\\underline\\\\text");
         tex = tex.replaceAll("\\\\newline", "\n");
