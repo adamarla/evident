@@ -13,9 +13,6 @@ import android.widget.ListView;
 
 import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
-import com.gradians.evident.dom.Question;
-
-import java.util.ArrayList;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -26,7 +23,7 @@ public class CardList extends Fragment {
     int chapterId;
 
     public static CardList newInstance(ICard header, ICard[] items, int chapterId) {
-        CardList cl = new CardList();
+        CardList cl = header == null ? new CardList(): new CardListRelated();
         Bundle bundle = new Bundle();
         bundle.putParcelable("header", header);
         bundle.putParcelableArray("items", items);
@@ -37,7 +34,6 @@ public class CardList extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.cards_list, container, false);
 
         Bundle args = getArguments();
@@ -45,20 +41,7 @@ public class CardList extends Fragment {
         cards = (ICard[])args.getParcelableArray("items");
 
         list = (ListView)view.findViewById(R.id.items);
-        if (getActivity().getClass().toString().endsWith("DoQuestion")) {
-            ICard questionCard = args.getParcelable("header");
-            CardView header = (CardView)inflater.inflate(R.layout.card, null);
-            setHeader(header, questionCard);
-
-            ArrayList<ICard> stack = new ArrayList<>();
-            stack.add(cards[0]);
-            adapter = new CardListAdapter(getContext(), stack);
-            list.setAdapter(adapter);
-            openStack();
-        } else {
-            adapter = new CardListAdapter(getContext(), cards);
-            list.setAdapter(adapter);
-        }
+        setAdapter(cards);
 
         CardListListener listener = new CardListListener(this);
         list.setOnItemClickListener(listener);
@@ -72,7 +55,7 @@ public class CardList extends Fragment {
                 list.setSelector(R.drawable.bg_selected_card);
                 list.setDrawSelectorOnTop(true);
                 list.setSelectionAfterHeaderView();
-                enableButtonBar(false);
+                answerButtonBar.enable(false);
             } else {
                 answerButtonBar.setVisibility(View.GONE);
             }
@@ -80,43 +63,30 @@ public class CardList extends Fragment {
         return view;
     }
 
-    public boolean revealNextCard() {
-        int position = adapter.getCount();
-        if (cards.length == position) return false;
-        adapter.add(cards[position]);
-        adapter.notifyDataSetChanged();
-        return true;
+    protected void setAdapter(ICard[] cards) {
+        adapter = new CardListAdapter(getContext(), cards);
+        list.setAdapter(adapter);
     }
 
-    public void enableButtonBar(boolean enable) {
+    void enableButtonBar(boolean enable) {
         answerButtonBar.enable(enable);
     }
 
-    private void openStack() {
-        int i = 0;
-        while (cards[i].hasBeenAttempted()) {
-            if (!revealNextCard()) break;
-            else i++;
-        }
-        return;
+    void postClickAction() {
+        enableButtonBar(false);
     }
 
-    private void setHeader(CardView view, ICard questionCard) {
-        view.setCard(questionCard);
-        view.disableExpansion();
-        list.addHeaderView(view, questionCard, false);
-    }
+    ICard[] cards;
+    ListView list;
+    CardListAdapter adapter;
 
-    private CardListAdapter adapter;
-    private ICard[] cards;
     private AnswerButtonBar answerButtonBar;
-    private ListView list;
 
 }
 
 class CardListListener implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-    public CardListListener(CardList cardList) {
+    CardListListener(CardList cardList) {
         this.cardList = cardList;
     }
 
@@ -128,7 +98,7 @@ class CardListListener implements AdapterView.OnItemClickListener, View.OnClickL
             Intent intent = new Intent(cardList.getActivity(), DoQuestion.class);
             intent.putExtra("chapterId", cardList.chapterId);
             intent.putExtra("position", position);
-            cardList.getActivity().startActivity(intent);
+            cardList.startActivity(intent);
         } else {
             if (selectedView != null && selectedView != view) {
                 selectedView.unselect();
@@ -145,11 +115,10 @@ class CardListListener implements AdapterView.OnItemClickListener, View.OnClickL
     @Override
     public void onClick(View view) {
         selectedView.answer(view.getId() == R.id.btn_is_true);
-        cardList.revealNextCard();
-        cardList.enableButtonBar(false);
+        cardList.postClickAction();
     }
 
-    CardList cardList;
-    CardView selectedView;
+    private CardList cardList;
+    private CardView selectedView;
 
 }

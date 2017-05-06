@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <com.himamis.retex.renderer.android.LaTeXView
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="@dimen/half_padding"
-        android:layout_marginTop="@dimen/divider_height"
-        android:layout_marginBottom="@dimen/divider_height"
-        android:visibility="gone"/>
-
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/items"
         android:layout_width="match_parent"
