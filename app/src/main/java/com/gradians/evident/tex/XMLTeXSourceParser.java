@@ -44,10 +44,7 @@ public class XMLTeXSourceParser extends TeXSourceParser {
                 String tex;
                 if (question.statement == null) {
                     tex = newCommands + extractTeX("\\newcard");
-                    Step statement = new Step(tex, null, null);
-                    statement.steps = true;
-                    statement.answerable = false;
-                    question.statement = statement;
+                    question.statement = new Step(tex, null, null);
                 } else {
                     tex = newCommands + extractTeX("\\newcard");
                     cards.put(String.format("tex-%s.svg", counter), tex);

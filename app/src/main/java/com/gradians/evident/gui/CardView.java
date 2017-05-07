@@ -35,8 +35,10 @@ public class CardView extends RelativeLayout {
         expansionIndicator = (ImageView)findViewById(R.id.expansion_indicator);
     }
 
-    public void disableExpansion() {
+    public void hideIndicators() {
         expansionIndicator.setVisibility(View.INVISIBLE);
+        trueIndicator.setVisibility(View.INVISIBLE);
+        rightIndicator.setImageResource(View.INVISIBLE);
     }
 
     public void setCard(ICard card) {
@@ -52,20 +54,23 @@ public class CardView extends RelativeLayout {
 
         if (card.isAnswerable()) {
             minHeight = (int)getResources().getDimension(R.dimen.snippet_min_height);
-            enableTrueIndicator();
-            if (card.hasBeenAttempted()) {
-                enableAttemptedIndicators();
-                enableExpansionIndicator(R.mipmap.ic_expand_more);
-            }
-
-        } else {
-            minHeight = (int)getResources().getDimension(R.dimen.skill_min_height);
             if (card.hasSteps()) {
                 enableExpansionIndicator(R.mipmap.ic_launch_new);
+                if (card.hasBeenAttempted()) {
+                    enableAttemptedIndicators();
+                }
             } else {
-                enableExpansionIndicator(R.mipmap.ic_expand_more);
+                enableTrueIndicator();
+                if (card.hasBeenAttempted()) {
+                    enableAttemptedIndicators();
+                    enableExpansionIndicator(R.mipmap.ic_expand_more);
+                }
             }
+        } else {
+            minHeight = (int)getResources().getDimension(R.dimen.skill_min_height);
+            enableExpansionIndicator(R.mipmap.ic_expand_more);
         }
+
         this.setMinimumHeight(minHeight);
     }
 

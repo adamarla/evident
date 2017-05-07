@@ -20,11 +20,12 @@ public class CardListRelated extends CardList {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         Bundle args = getArguments();
-        ICard questionCard = args.getParcelable("header");
+        questionCard = args.getParcelable("header");
         CardView header = (CardView)inflater.inflate(R.layout.card, null);
         header.setCard(questionCard);
-        header.disableExpansion();
+        header.hideIndicators(); // Has to be called after header.setCard(...)
         list.addHeaderView(header, questionCard, false);
+        list.setSelectionAfterHeaderView();
 
         openStack();
         return view;
@@ -41,8 +42,23 @@ public class CardListRelated extends CardList {
     @Override
     void postClickAction() {
         super.postClickAction();
-        revealNextCard();
+        if (!revealNextCard()) {
+            boolean complete = true, correct = true;
+            for (ICard card: this.cards)
+                if (!card.hasBeenAttempted()) {
+                    complete = false;
+                    break;
+                } else {
+                    if (correct)
+                        correct = card.getAttempt() == card.isCorrect();
+                }
+
+            if (complete)
+                questionCard.setAttempt(correct);
+        }
     }
+
+    private ICard questionCard;
 
     private boolean revealNextCard() {
         int position = adapter.getCount();

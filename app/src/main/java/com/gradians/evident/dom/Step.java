@@ -18,7 +18,8 @@ public class Step implements ICard {
         this.correct = correct;
         this.incorrect = incorrect;
         this.reason = reason;
-        steps = false;
+
+        steps = reason == null; // true only in case of question statement
         answerable = true;
     }
 

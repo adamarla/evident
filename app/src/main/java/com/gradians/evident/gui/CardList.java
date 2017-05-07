@@ -54,7 +54,6 @@ public class CardList extends Fragment {
                 list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                 list.setSelector(R.drawable.bg_selected_card);
                 list.setDrawSelectorOnTop(true);
-                list.setSelectionAfterHeaderView();
                 answerButtonBar.enable(false);
             } else {
                 answerButtonBar.setVisibility(View.GONE);
@@ -92,7 +91,6 @@ class CardListListener implements AdapterView.OnItemClickListener, View.OnClickL
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Log.d("EvidentApp", "Item Click # "+ position + " id: " + id + " view.toString: " + view.toString());
         ICard card = ((CardView)view).getCard();
         if (card.hasSteps()) {
             Intent intent = new Intent(cardList.getActivity(), DoQuestion.class);

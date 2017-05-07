@@ -117,10 +117,7 @@ public class XMLSourceParser extends SourceParser {
                     parser.next();
                     String text = parser.getText();
                     if (question.statement == null) {
-                        Step statement = new Step(toPureTeX(text), null, null);
-                        statement.steps = true;
-                        statement.answerable = false;
-                        question.statement = statement;
+                        question.statement = new Step(toPureTeX(text), null, null);
                     } else if (inStep) {
                         if (isCorrect == null || isCorrect.equals("true")) {
                             correct = toPureTeX(text);

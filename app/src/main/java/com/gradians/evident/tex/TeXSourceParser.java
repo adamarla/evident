@@ -107,10 +107,7 @@ public class TeXSourceParser extends SourceParser {
 
             jumpTo("\\statement");
             String statementTex = newCommands + extractTeX("\\begin{step}");
-            Step statement = new Step(statementTex, null, null);
-            statement.steps = true;
-            statement.answerable = false;
-            question.statement = statement;
+            question.statement = new Step(statementTex, null, null);
 
             ArrayList<Step> _steps = new ArrayList<>();
             while (br.readLine() != null) {
