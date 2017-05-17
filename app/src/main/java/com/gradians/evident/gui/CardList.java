@@ -13,6 +13,9 @@ import android.widget.ListView;
 
 import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
+import com.gradians.evident.activity.InChapter;
+import com.gradians.evident.dom.Chapter;
+import com.gradians.evident.dom.Question;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -20,14 +23,11 @@ import com.gradians.evident.activity.DoQuestion;
 
 public class CardList extends Fragment {
 
-    int chapterId;
-
-    public static CardList newInstance(ICard header, ICard[] items, int chapterId) {
+    public static CardList newInstance(ICard[] items, ICard header) {
         CardList cl = header == null ? new CardList(): new CardListRelated();
         Bundle bundle = new Bundle();
         bundle.putParcelable("header", header);
         bundle.putParcelableArray("items", items);
-        bundle.putInt("chapterId", chapterId);
         cl.setArguments(bundle);
         return cl;
     }
@@ -37,7 +37,6 @@ public class CardList extends Fragment {
         View view = inflater.inflate(R.layout.cards_list, container, false);
 
         Bundle args = getArguments();
-        chapterId = args.getInt("chapterId");
         cards = (ICard[])args.getParcelableArray("items");
 
         list = (ListView)view.findViewById(R.id.items);
@@ -62,7 +61,16 @@ public class CardList extends Fragment {
         return view;
     }
 
-    protected void setAdapter(ICard[] cards) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        int position = data.getIntExtra("position", -1);
+        Question question = data.getParcelableExtra("question");
+        cards[position] = question.getCard();
+        adapter.notifyDataSetChanged();
+    }
+
+    void setAdapter(ICard[] cards) {
         adapter = new CardListAdapter(getContext(), cards);
         list.setAdapter(adapter);
     }
@@ -73,6 +81,10 @@ public class CardList extends Fragment {
 
     void postClickAction() {
         enableButtonBar(false);
+    }
+
+    Question getQuestionAt(int position) {
+        return ((InChapter)getActivity()).getQuestion(position);
     }
 
     ICard[] cards;
@@ -94,9 +106,9 @@ class CardListListener implements AdapterView.OnItemClickListener, View.OnClickL
         ICard card = ((CardView)view).getCard();
         if (card.hasSteps()) {
             Intent intent = new Intent(cardList.getActivity(), DoQuestion.class);
-            intent.putExtra("chapterId", cardList.chapterId);
+            intent.putExtra("question", cardList.getQuestionAt(position));
             intent.putExtra("position", position);
-            cardList.startActivity(intent);
+            cardList.startActivityForResult(intent, 10);
         } else {
             if (selectedView != null && selectedView != view) {
                 selectedView.unselect();

@@ -1,6 +1,8 @@
 package com.gradians.evident.dom;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
@@ -11,7 +13,7 @@ import java.util.Stack;
  * Created by adamarla on 3/19/17.
  */
 
-public class Chapter implements Comparable<Chapter> {
+public class Chapter implements Comparable<Chapter>, Parcelable {
 
     public Chapter(int id, String name) {
         this.id = id;
@@ -22,7 +24,7 @@ public class Chapter implements Comparable<Chapter> {
     }
 
     public void load(Context context) {
-        ArrayList[] assets = { skills, snippets, questions};
+        ArrayList[] assets = { skills, snippets, questions };
         for (ArrayList list : assets) {
             Stack<Asset> blanks = new Stack<>();
             for (Object asset: list)
@@ -69,5 +71,39 @@ public class Chapter implements Comparable<Chapter> {
     @Override
     public int compareTo(Chapter chapter) {
         return name.compareTo(chapter.name);
+    }
+
+    private Chapter(Parcel in) {
+        skills = in.createTypedArrayList(Skill.CREATOR);
+        snippets = in.createTypedArrayList(Snippet.CREATOR);
+        questions = in.createTypedArrayList(Question.CREATOR);
+        id = in.readInt();
+        name = in.readString();
+    }
+
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+        @Override
+        public Chapter createFromParcel(Parcel in) {
+            return new Chapter(in);
+        }
+
+        @Override
+        public Chapter[] newArray(int size) {
+            return new Chapter[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(skills);
+        parcel.writeTypedList(snippets);
+        parcel.writeTypedList(questions);
+        parcel.writeInt(id);
+        parcel.writeString(name);
     }
 }

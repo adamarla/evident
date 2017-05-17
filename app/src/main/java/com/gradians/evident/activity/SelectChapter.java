@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.gradians.evident.EvidentApp;
 import com.gradians.evident.R;
-import com.gradians.evident.tex.Sources;
+import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
 
@@ -34,14 +34,15 @@ public class SelectChapter extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(parent, InChapter.class) ;
+                Intent intent = new Intent(parent, InChapter.class);
+                intent.putExtra("chapter", chapterList.getChapters()[i]);
                 intent.putExtra("chapterId", chapterList.getChapters()[i].id);
                 parent.startActivity(intent);
             }
         });
 
         chapterList.download(this);
-        new Sources(this).sync();
+        new SourceControl(this).sync();
     }
 
     public ProgressDialog getProgressDialog() {

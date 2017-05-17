@@ -43,7 +43,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                     cards[i] = q.getCard(); i++;
                 }
         }
-        return CardList.newInstance(null, cards, chapter.id);
+        return CardList.newInstance(cards, null);
     }
 
     @Override

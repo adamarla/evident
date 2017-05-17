@@ -42,6 +42,7 @@ public abstract class Asset implements Parcelable {
         File xmlSource = new File(dir, "source.xml");
         if (!texSource.exists() && !xmlSource.exists()) return false;
 
+
         try {
             SourceParser parser;
             if (!texSource.exists() && xmlSource.exists()) {
@@ -61,10 +62,10 @@ public abstract class Asset implements Parcelable {
 
     protected abstract void extract(SourceParser parser) throws Exception;
 
-    protected int id;
-    protected String path;
+    private int id;
+    private String path;
 
-    protected Asset(Parcel in) {
+    Asset(Parcel in) {
         id = in.readInt();
         path = in.readString();
     }

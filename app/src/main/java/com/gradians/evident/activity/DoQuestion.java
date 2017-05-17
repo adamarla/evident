@@ -1,5 +1,6 @@
 package com.gradians.evident.activity;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -20,17 +21,25 @@ public class DoQuestion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_do_question);
 
-        int chapterId = getIntent().getIntExtra("chapterId", 0);
-        int position = getIntent().getIntExtra("position", 0);
-
-        Chapter chapter = EvidentApp.app.chapterList.getChapter(chapterId);
-        Question question = chapter.questions.get(position);
-
+        position = getIntent().getIntExtra("position", 0);
+        question = getIntent().getParcelableExtra("question");
         ICard[] cards = question.getSteps();
-        CardListRelated cardList = (CardListRelated)CardList.newInstance(question.getCard(), cards, 0);
+        CardListRelated cardList = (CardListRelated)CardList.newInstance(cards, question.getCard());
 
         initiate(cardList);
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("position", position);
+        intent.putExtra("question", question);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
+
+    private Question question;
+    private int position;
 
     private void initiate(CardList cl) {
         FragmentManager fragmentManager = getSupportFragmentManager();

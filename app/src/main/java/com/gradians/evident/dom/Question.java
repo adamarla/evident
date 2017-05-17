@@ -36,7 +36,7 @@ public class Question extends Asset {
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         parcel.writeParcelable(statement, 0);
-        parcel.writeParcelableArray(steps, 0);
+        parcel.writeTypedArray(steps, 0);
     }
 
     public static Creator<Question> CREATOR = new Creator<Question>() {
@@ -53,9 +53,8 @@ public class Question extends Asset {
 
     private Question(Parcel in) {
         super(in);
-        ClassLoader cl = this.getClass().getClassLoader();
-        statement = in.readParcelable(cl);
-        steps = (Step[])in.readParcelableArray(cl);
+        statement = in.readParcelable(this.getClass().getClassLoader());
+        steps = in.createTypedArray(Step.CREATOR);
     }
 
 }

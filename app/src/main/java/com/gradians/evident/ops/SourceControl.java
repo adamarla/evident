@@ -1,4 +1,4 @@
-package com.gradians.evident.tex;
+package com.gradians.evident.ops;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -19,9 +19,9 @@ import java.io.IOException;
  * Created by adamarla on 3/20/17.
  */
 
-public class Sources {
+public class SourceControl {
 
-    public Sources(Context context) {
+    public SourceControl(Context context) {
         vault = init(context);
     }
 
@@ -39,7 +39,7 @@ public class Sources {
         }
     }
 
-    File vault;
+    private File vault;
 
     private void gitPull(File vault) {
         Repository repo = null;
