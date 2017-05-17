@@ -50,7 +50,7 @@ public class CardList extends Fragment {
         answerButtonBar.setOnClickListener(listener);
 
         if (cards.length > 0)
-            if (cards[0].isAnswerable()) {
+            if (cards[0].isAnswerable() && !cards[0].hasSteps()) {
                 list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                 list.setSelector(R.drawable.bg_selected_card);
                 list.setDrawSelectorOnTop(true);
