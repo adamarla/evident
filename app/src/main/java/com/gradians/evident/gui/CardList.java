@@ -3,7 +3,6 @@ package com.gradians.evident.gui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,13 @@ import android.widget.ListView;
 import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
 import com.gradians.evident.activity.InChapter;
-import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 
 /**
  * Created by adamarla on 3/26/17.
  */
 
-public class CardList extends Fragment {
+public class CardList extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     public static CardList newInstance(ICard[] items, ICard header) {
         CardList cl = header == null ? new CardList(): new CardListRelated();
@@ -42,14 +40,13 @@ public class CardList extends Fragment {
         list = (ListView)view.findViewById(R.id.items);
         setAdapter(cards);
 
-        CardListListener listener = new CardListListener(this);
-        list.setOnItemClickListener(listener);
+        list.setOnItemClickListener(this);
 
         answerButtonBar = (AnswerButtonBar)view.findViewById(R.id.answer_button_bar);
-        answerButtonBar.setOnClickListener(listener);
+        answerButtonBar.setOnClickListener(this);
 
         if (cards.length > 0)
-            if (cards[0].isAnswerable() && !cards[0].hasSteps()) {
+            if (cards[0].isAnswerable() && !cards[0].hasFurtherSteps()) {
                 list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                 list.setSelector(R.drawable.bg_selected_card);
                 list.setDrawSelectorOnTop(true);
@@ -68,6 +65,34 @@ public class CardList extends Fragment {
         Question question = data.getParcelableExtra("question");
         cards[position] = question.getCard();
         adapter.notifyDataSetChanged();
+        ((InChapter)getActivity()).setQuestion(question, position);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        ICard card = ((CardView)view).getCard();
+        if (card.hasFurtherSteps()) {
+            Intent intent = new Intent(getActivity(), DoQuestion.class);
+            intent.putExtra("question", ((InChapter)getActivity()).getQuestion(position));
+            intent.putExtra("position", position);
+            startActivityForResult(intent, 10);
+        } else {
+            if (selectedView != null && selectedView != view) {
+                selectedView.unselect();
+            }
+
+            selectedView = (CardView)view;
+            selectedView.select();
+
+            if (card.wasAttempted()) enableButtonBar(false);
+            else enableButtonBar(true);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        selectedView.answer(view.getId() == R.id.btn_is_true);
+        postClickAction();
     }
 
     void setAdapter(ICard[] cards) {
@@ -83,52 +108,12 @@ public class CardList extends Fragment {
         enableButtonBar(false);
     }
 
-    Question getQuestionAt(int position) {
-        return ((InChapter)getActivity()).getQuestion(position);
-    }
-
     ICard[] cards;
     ListView list;
     CardListAdapter adapter;
 
+    private CardView selectedView;
     private AnswerButtonBar answerButtonBar;
 
 }
 
-class CardListListener implements AdapterView.OnItemClickListener, View.OnClickListener {
-
-    CardListListener(CardList cardList) {
-        this.cardList = cardList;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        ICard card = ((CardView)view).getCard();
-        if (card.hasSteps()) {
-            Intent intent = new Intent(cardList.getActivity(), DoQuestion.class);
-            intent.putExtra("question", cardList.getQuestionAt(position));
-            intent.putExtra("position", position);
-            cardList.startActivityForResult(intent, 10);
-        } else {
-            if (selectedView != null && selectedView != view) {
-                selectedView.unselect();
-            }
-
-            selectedView = (CardView)view;
-            selectedView.select();
-
-            if (card.hasBeenAttempted()) cardList.enableButtonBar(false);
-            else cardList.enableButtonBar(true);
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        selectedView.answer(view.getId() == R.id.btn_is_true);
-        cardList.postClickAction();
-    }
-
-    private CardList cardList;
-    private CardView selectedView;
-
-}

@@ -43,18 +43,10 @@ public class CardListRelated extends CardList {
     void postClickAction() {
         super.postClickAction();
         if (!revealNextCard()) {
-            boolean complete = true, correct = true;
-            for (ICard card: this.cards)
-                if (!card.hasBeenAttempted()) {
-                    complete = false;
-                    break;
-                } else {
-                    if (correct)
-                        correct = card.getAttempt() == card.isCorrect();
-                }
-
-            if (complete)
-                questionCard.setAttempt(correct);
+            boolean correct = true;
+            for (ICard card: cards)
+                correct = correct && card.getAttempt() == card.isCorrect();
+            questionCard.setAttempt(correct);
         }
     }
 
@@ -70,7 +62,7 @@ public class CardListRelated extends CardList {
 
     private void openStack() {
         int i = 0;
-        while (cards[i].hasBeenAttempted()) {
+        while (cards[i].wasAttempted()) {
             if (!revealNextCard()) break;
             else i++;
         }

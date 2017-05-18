@@ -33,7 +33,7 @@ public class Skill extends Asset implements ICard {
 
     // Irrelevant methods begin ==>
     @Override
-    public boolean hasBeenAttempted() {
+    public boolean wasAttempted() {
         return true;
     }
 
@@ -57,7 +57,7 @@ public class Skill extends Asset implements ICard {
     }
 
     @Override
-    public boolean hasSteps() {
+    public boolean hasFurtherSteps() {
         return false;
     }
 
@@ -87,7 +87,7 @@ public class Skill extends Asset implements ICard {
         }
     };
 
-    protected Skill(Parcel in) {
+    private Skill(Parcel in) {
         super(in);
         title = in.readString();
         studyNote = in.readString();

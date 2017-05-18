@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.gradians.evident.EvidentApp;
 import com.gradians.evident.R;
 import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
@@ -23,7 +22,7 @@ public class SelectChapter extends AppCompatActivity {
         setContentView(R.layout.activity_select_chapter);
 
         // Set the adapter on the list
-        chapterList = EvidentApp.app.chapterList;
+        chapterList = new ChapterList();
         chapterList.loadCatalog("chapters", getAssets());
         ChapterListAdapter adapter = new ChapterListAdapter(this, chapterList.getChapters());
 

@@ -12,8 +12,6 @@ import com.gradians.evident.tex.XMLSourceParser;
 import com.gradians.evident.tex.XMLTeXSourceParser;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 /**
  * Created by adamarla on 3/19/17.
@@ -36,7 +34,7 @@ public abstract class Asset implements Parcelable {
 
     public abstract ICard getCard();
 
-    public boolean load(Context context) {
+    boolean load(Context context) {
         File dir = new File(context.getExternalFilesDir(null), "vault/" + path);
         File texSource = new File(dir, "source.tex");
         File xmlSource = new File(dir, "source.xml");

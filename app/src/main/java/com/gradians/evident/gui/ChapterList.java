@@ -19,10 +19,8 @@ import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
 import com.gradians.evident.dom.Snippet;
 
-import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.ProgressCallback;
 
 import java.io.File;
 import java.io.FileReader;
@@ -38,7 +36,7 @@ import java.util.HashMap;
 public class ChapterList {
 
     public ChapterList() {
-        chapters = new HashMap<>();
+        chapters = new HashMap<Integer, Chapter>();
     }
 
     public Chapter getChapter(int chapterId) {

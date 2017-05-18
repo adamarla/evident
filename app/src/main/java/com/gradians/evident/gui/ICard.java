@@ -1,6 +1,5 @@
 package com.gradians.evident.gui;
 
-import android.content.Context;
 import android.os.Parcelable;
 
 /**
@@ -17,12 +16,12 @@ public interface ICard extends Parcelable {
 
     boolean getAttempt();
 
-    boolean hasBeenAttempted();
+    boolean wasAttempted();
 
     boolean isAnswerable();
 
     boolean isCorrect();
 
-    boolean hasSteps();
+    boolean hasFurtherSteps();
 
 }

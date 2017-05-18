@@ -28,10 +28,20 @@ public class InChapter extends AppCompatActivity {
         tabs.setupWithViewPager(pager);
     }
 
+    @Override
+    public void onBackPressed() {
+        chapter.save(this);
+        super.onBackPressed();
+    }
+
     public Question getQuestion(int position) {
         return chapter.questions.get(position);
     }
 
-    public Chapter chapter;
+    public void setQuestion(Question question, int position) {
+        chapter.questions.set(position, question);
+    }
+
+    private Chapter chapter;
 
 }

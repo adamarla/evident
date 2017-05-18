@@ -54,14 +54,14 @@ public class CardView extends RelativeLayout {
 
         if (card.isAnswerable()) {
             minHeight = (int)getResources().getDimension(R.dimen.snippet_min_height);
-            if (card.hasSteps()) {
+            if (card.hasFurtherSteps()) {
                 enableExpansionIndicator(R.mipmap.ic_launch_new);
-                if (card.hasBeenAttempted()) {
+                if (card.wasAttempted()) {
                     enableAttemptedIndicators();
                 }
             } else {
                 enableTrueIndicator();
-                if (card.hasBeenAttempted()) {
+                if (card.wasAttempted()) {
                     enableAttemptedIndicators();
                     enableExpansionIndicator(R.mipmap.ic_expand_more);
                 }
@@ -85,7 +85,7 @@ public class CardView extends RelativeLayout {
         // selected item. That's why explicitly
         // specifying background as White
         setBackgroundResource(R.color.white);
-        if (card.hasBeenAttempted()) flip();
+        if (card.wasAttempted()) flip();
     }
 
     public void unselect() {
@@ -104,7 +104,7 @@ public class CardView extends RelativeLayout {
             lp.addRule(RelativeLayout.CENTER_VERTICAL, 0);
             lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             rear.setVisibility(View.VISIBLE);
-            if (card.isAnswerable() && card.hasBeenAttempted()) {
+            if (card.isAnswerable() && card.wasAttempted()) {
                 trueIndicator.setVisibility(View.VISIBLE);
                 rightIndicator.setVisibility(View.INVISIBLE);
             }

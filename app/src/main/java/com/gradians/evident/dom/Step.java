@@ -11,7 +11,7 @@ public class Step implements ICard {
 
     public Step(String correct, String incorrect, String reason) {
         if (correct != null && incorrect != null) {
-            faceShownIsCorrect = ((int)Math.random()*10)%2 == 0;
+            faceShownIsCorrect = ((int)(Math.random()*10))%2 == 0;
         } else {
             faceShownIsCorrect = correct != null;
         }
@@ -19,7 +19,7 @@ public class Step implements ICard {
         this.incorrect = incorrect;
         this.reason = reason;
 
-        steps = reason == null; // true only in case of question statement
+        hasSteps = reason == null; // true only in case of question statement
         answerable = true;
     }
 
@@ -45,7 +45,7 @@ public class Step implements ICard {
     }
 
     @Override
-    public boolean hasBeenAttempted() {
+    public boolean wasAttempted() {
         return attempted;
     }
 
@@ -60,12 +60,12 @@ public class Step implements ICard {
     }
 
     @Override
-    public boolean hasSteps() {
-        return steps;
+    public boolean hasFurtherSteps() {
+        return hasSteps;
     }
 
-    public String correct, incorrect, reason;
-    public boolean faceShownIsCorrect, attempted, attempt, steps, answerable;
+    private String correct, incorrect, reason;
+    private boolean faceShownIsCorrect, attempted, attempt, hasSteps, answerable;
 
     @Override
     public int describeContents() {
@@ -80,7 +80,7 @@ public class Step implements ICard {
         parcel.writeInt(faceShownIsCorrect ? 1 : 0);
         parcel.writeInt(attempted ? 1 : 0);
         parcel.writeInt(attempt ? 1 : 0);
-        parcel.writeInt(steps ? 1 : 0);
+        parcel.writeInt(hasSteps ? 1 : 0);
         parcel.writeInt(answerable ? 1: 0);
     }
 
@@ -103,7 +103,7 @@ public class Step implements ICard {
         faceShownIsCorrect = in.readInt() == 1;
         attempted = in.readInt() == 1;
         attempt = in.readInt() == 1;
-        steps = in.readInt() == 1;
+        hasSteps = in.readInt() == 1;
         answerable = in.readInt() == 1;
     }
 

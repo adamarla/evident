@@ -3,8 +3,9 @@ package com.gradians.evident.dom;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.content.res.TypedArrayUtils;
-import android.util.Log;
+
+import com.gradians.evident.gui.ICard;
+import com.gradians.evident.ops.Recorder;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -24,17 +25,38 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
     }
 
     public void load(Context context) {
+        Recorder recorder = new Recorder(context, this);
         ArrayList[] assets = { skills, snippets, questions };
         for (ArrayList list : assets) {
             Stack<Asset> blanks = new Stack<>();
-            for (Object asset: list)
-                if (!((Asset)asset).load(context))
-                    blanks.push((Asset)asset);
+            for (Object obj: list) {
+                Asset asset = (Asset)obj;
+                if (!asset.load(context))
+                    blanks.push(asset);
+                else if (asset.getCard().isAnswerable()) {
+                    recorder.readFromRecord(asset);
+                }
+            }
+
             // don't want nothing to do with assets that
             // could not get loaded for whatever reason
             while (!blanks.empty())
                 list.remove(blanks.pop());
         }
+    }
+
+    public void save(Context context) {
+        Recorder recorder = new Recorder(context, this);
+        ArrayList[] assets = { snippets, questions };
+        for (ArrayList list : assets)
+            for (Object obj : list) {
+                Asset asset = (Asset)obj;
+                ICard card = asset.getCard();
+                if (card.wasAttempted()) {
+                    recorder.writeToRecord(asset);
+                }
+            }
+        recorder.commit();
     }
 
     public Asset[] getAllAssets() {

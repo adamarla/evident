@@ -6,9 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.gradians.evident.EvidentApp;
 import com.gradians.evident.R;
-import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.gui.CardList;
 import com.gradians.evident.gui.CardListRelated;

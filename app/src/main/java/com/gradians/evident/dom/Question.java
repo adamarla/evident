@@ -5,6 +5,7 @@ import android.os.Parcel;
 import com.gradians.evident.gui.ICard;
 import com.gradians.evident.tex.SourceParser;
 
+
 /**
  * Created by adamarla on 3/19/17.
  */

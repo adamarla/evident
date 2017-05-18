@@ -56,5 +56,5 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return position == 0 ? "Review" : (position == 1 ? "Practise" : "Solve");
     }
 
-    Chapter chapter;
+    private Chapter chapter;
 }
