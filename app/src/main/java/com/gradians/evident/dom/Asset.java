@@ -32,6 +32,14 @@ public abstract class Asset implements Parcelable {
         return path;
     }
 
+    public int getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(int chapterId) {
+        this.chapterId = chapterId;
+    }
+
     public abstract ICard getCard();
 
     boolean load(Context context) {
@@ -60,11 +68,12 @@ public abstract class Asset implements Parcelable {
 
     protected abstract void extract(SourceParser parser) throws Exception;
 
-    private int id;
+    private int id, chapterId;
     private String path;
 
     Asset(Parcel in) {
         id = in.readInt();
+        chapterId = in.readInt();
         path = in.readString();
     }
 
@@ -76,6 +85,7 @@ public abstract class Asset implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
+        parcel.writeInt(chapterId);
         parcel.writeString(path);
     }
 

@@ -3,8 +3,10 @@ package com.gradians.evident.dom;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.gradians.evident.gui.ICard;
+import com.gradians.evident.ops.ActivityLog;
 import com.gradians.evident.ops.Recorder;
 
 import java.util.ArrayList;
@@ -25,16 +27,16 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
     }
 
     public void load(Context context) {
-        Recorder recorder = new Recorder(context, this);
-        ArrayList[] assets = { skills, snippets, questions };
-        for (ArrayList list : assets) {
+        Recorder recorder = new Recorder(context, id);
+        ArrayList[] lists = { skills, snippets, questions };
+        for (ArrayList list : lists) {
             Stack<Asset> blanks = new Stack<>();
             for (Object obj: list) {
                 Asset asset = (Asset)obj;
                 if (!asset.load(context))
                     blanks.push(asset);
                 else if (asset.getCard().isAnswerable()) {
-                    recorder.readFromRecord(asset);
+                    recorder.replay(asset);
                 }
             }
 
@@ -46,17 +48,19 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
     }
 
     public void save(Context context) {
-        Recorder recorder = new Recorder(context, this);
-        ArrayList[] assets = { snippets, questions };
-        for (ArrayList list : assets)
+        Recorder recorder = new Recorder(context, id);
+        ActivityLog log = new ActivityLog(context);
+        ArrayList[] lists = { snippets, questions };
+        for (ArrayList list : lists)
             for (Object obj : list) {
                 Asset asset = (Asset)obj;
                 ICard card = asset.getCard();
-                if (card.wasAttempted()) {
-                    recorder.writeToRecord(asset);
+                if (card.wasAttempted() && recorder.capture(asset)) {
+                    log.record(asset);
                 }
             }
         recorder.commit();
+        log.transmit();
     }
 
     public Asset[] getAllAssets() {
@@ -69,12 +73,17 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
 
     public void addSkill(Skill skill) {
         skills.add(skill);
+        linkToChapter(skill);
     }
+
     public void addSnippet(Snippet snippet) {
         snippets.add(snippet);
+        linkToChapter(snippet);
     }
+
     public void addQuestion(Question question) {
         questions.add(question);
+        linkToChapter(question);
     }
 
     public ArrayList<Skill> skills;
@@ -88,6 +97,10 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
     public String toString() {
         return name + ": " + skills.size() + " skills; " + snippets.size() + " snippets; "
                 + questions.size() + " questions";
+    }
+
+    private void linkToChapter(Asset asset) {
+        asset.setChapterId(id);
     }
 
     @Override
