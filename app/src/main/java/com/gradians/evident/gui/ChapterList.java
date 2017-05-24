@@ -2,6 +2,7 @@ package com.gradians.evident.gui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -77,10 +78,10 @@ public class ChapterList {
         }
     }
 
-    public void download(final Activity caller) {
+    public void download(final Context context, final ProgressDialog dialog) {
         JsonArray array = null;
         try {
-            File json = new File(caller.getExternalFilesDir(null), "assets.json");
+            File json = new File(context.getExternalFilesDir(null), "assets.json");
             if (json.exists()) {
                 JsonReader reader = new JsonReader(new FileReader(json));
                 JsonParser parser = new JsonParser();
@@ -94,9 +95,8 @@ public class ChapterList {
         if (array != null) highestId = parseResult(array, 0);
 
         final int last = highestId;
-        final ProgressDialog dialog = ((SelectChapter)caller).getProgressDialog();
         Log.d("EvidentApp", "download started (last = " + last + ")");
-        Ion.with(caller)
+        Ion.with(context)
                 .load("http://www.gradians.com/sku/list?last=" + last)
                 .progressDialog(dialog)
                 .asJsonArray()
@@ -108,7 +108,7 @@ public class ChapterList {
                             int newHighestId = parseResult(jsonArray, last);
                             Log.d("EvidentApp", "download completed (last = " + newHighestId + ")");
                             try {
-                                writeResults(caller);
+                                writeResults(context);
                             } catch (Exception ex) {
                                 Log.e("EvidentApp", "Error serializing assets.json " + ex.getMessage());
                             }
@@ -146,8 +146,8 @@ public class ChapterList {
         return highestId;
     }
 
-    private void writeResults(Activity caller) throws Exception {
-        File json = new File(caller.getExternalFilesDir(null), "assets.json");
+    private void writeResults(Context context) throws Exception {
+        File json = new File(context.getExternalFilesDir(null), "assets.json");
         JsonWriter writer = new JsonWriter(new FileWriter(json));
 
         writer.beginArray();

@@ -1,13 +1,18 @@
 package com.gradians.evident.dom;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.gradians.evident.activity.InChapter;
 import com.gradians.evident.gui.ICard;
 import com.gradians.evident.ops.ActivityLog;
 import com.gradians.evident.ops.Recorder;
+
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -26,25 +31,39 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
         questions = new ArrayList<>();
     }
 
-    public void load(Context context) {
-        Recorder recorder = new Recorder(context, id);
-        ArrayList[] lists = { skills, snippets, questions };
-        for (ArrayList list : lists) {
-            Stack<Asset> blanks = new Stack<>();
-            for (Object obj: list) {
-                Asset asset = (Asset)obj;
-                if (!asset.load(context))
-                    blanks.push(asset);
-                else if (asset.getCard().isAnswerable()) {
-                    recorder.replay(asset);
+    public void load(final Context context, final ProgressDialog dialog) {
+        AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Recorder recorder = new Recorder(context, id);
+                ArrayList[] lists = { skills, snippets, questions };
+                for (ArrayList list : lists) {
+                    Stack<Asset> blanks = new Stack<>();
+                    for (Object obj: list) {
+                        Asset asset = (Asset)obj;
+                        if (!asset.load(context))
+                            blanks.push(asset);
+                        else if (asset.getCard().isAnswerable()) {
+                            recorder.replay(asset);
+                        }
+                    }
+
+                    // don't want nothing to do with assets that
+                    // could not get loaded for whatever reason
+                    while (!blanks.empty())
+                        list.remove(blanks.pop());
                 }
+                return true;
             }
 
-            // don't want nothing to do with assets that
-            // could not get loaded for whatever reason
-            while (!blanks.empty())
-                list.remove(blanks.pop());
-        }
+            @Override
+            protected void onPostExecute(Boolean done) {
+                Log.d("EvidentApp", "Pulled!");
+                ((InChapter)context).onLoad();
+                dialog.cancel();
+            }
+        };
+        task.execute();
     }
 
     public void save(Context context) {
@@ -142,3 +161,4 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
         parcel.writeString(name);
     }
 }
+

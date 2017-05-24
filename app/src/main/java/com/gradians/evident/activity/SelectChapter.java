@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gradians.evident.R;
+import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
@@ -22,7 +23,7 @@ public class SelectChapter extends AppCompatActivity {
         setContentView(R.layout.activity_select_chapter);
 
         // Set the adapter on the list
-        chapterList = new ChapterList();
+        final ChapterList chapterList = new ChapterList();
         chapterList.loadCatalog("chapters", getAssets());
         ChapterListAdapter adapter = new ChapterListAdapter(this, chapterList.getChapters());
 
@@ -35,29 +36,25 @@ public class SelectChapter extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(parent, InChapter.class);
                 intent.putExtra("chapter", chapterList.getChapters()[i]);
-                intent.putExtra("chapterId", chapterList.getChapters()[i].id);
                 parent.startActivity(intent);
             }
         });
 
-        chapterList.download(this);
+        chapterList.download(this, getProgressDialog());
         new SourceControl(this).sync();
     }
 
-    public ProgressDialog getProgressDialog() {
-        mPd = new ProgressDialog(this);
-        mPd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mPd.setCancelable(false);
-        mPd.setProgressNumberFormat(null);
-        mPd.setProgressPercentFormat(null);
-        mPd.setTitle("Syncing...");
-        mPd.setMessage("Please wait...");
-        mPd.setIndeterminate(true);
-        mPd.show();
-        return mPd;
+    private ProgressDialog getProgressDialog() {
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setCancelable(false);
+        dialog.setProgressNumberFormat(null);
+        dialog.setProgressPercentFormat(null);
+        dialog.setTitle("Syncing...");
+        dialog.setMessage("Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.show();
+        return dialog;
     }
-
-    private ChapterList chapterList;
-    private ProgressDialog mPd ;
 
 }
