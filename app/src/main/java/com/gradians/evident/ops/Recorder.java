@@ -65,8 +65,12 @@ public class Recorder {
             if (card.hasFurtherSteps()) {
                 Step[] steps = ((Question)asset).getSteps();
                 String[] stepRight = gotRight.split(",");
-                for (int i = 0; i < steps.length; i++)
+                boolean allRight = true;
+                for (int i = 0; i < steps.length; i++) {
                     steps[i].setAttempt(Boolean.parseBoolean(stepRight[i]) == steps[i].isCorrect());
+                    allRight = allRight && Boolean.parseBoolean(stepRight[i]);
+                }
+                card.setAttempt(allRight);
             } else {
                 card.setAttempt(Boolean.parseBoolean(gotRight) == card.isCorrect());
             }
