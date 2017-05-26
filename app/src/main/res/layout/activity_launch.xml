@@ -4,7 +4,7 @@
     android:id="@+id/activity_launch"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@drawable/bg_launch"
     tools:context="com.gradians.evident.activity.Launch">
 
     <com.google.android.gms.common.SignInButton

@@ -41,16 +41,17 @@ public class Recorder {
         if (properties.getProperty(key) == null) {
             ICard card = asset.getCard();
             if (card.wasAttempted()) {
-                String attempt = String.valueOf(card.getAttempt());
+                String gotRight = String.valueOf(card.getAttempt());
                 if (card.hasFurtherSteps()) {
                     Step[] steps = ((Question)asset).getSteps();
-                    Boolean[] attempts = new Boolean[steps.length];
+                    Boolean[] stepRight = new Boolean[steps.length];
                     for (int i = 0; i < steps.length; i++)
-                        attempts[i] = steps[i].getAttempt();
-                    attempt = TextUtils.join(",", attempts);
+                        stepRight[i] = steps[i].isCorrect() == steps[i].getAttempt();
+                    gotRight = TextUtils.join(",", stepRight);
                 }
-                // setProperty will return null if it wasn't set before
-                captured = properties.setProperty(key, attempt) == null;
+                // setProperty will return null if it wasn't set before,
+                // therefore captured == true indicates fresh attempt
+                captured = properties.setProperty(key, gotRight) == null;
             }
         }
         return captured;
@@ -60,14 +61,14 @@ public class Recorder {
         ICard card = asset.getCard();
         String key = getKey(asset.getId(), asset.getPath());
         if (properties.get(key) != null) {
-            String value = (String)properties.get(key);
+            String gotRight = (String)properties.get(key);
             if (card.hasFurtherSteps()) {
                 Step[] steps = ((Question)asset).getSteps();
-                String[] values = value.split(",");
+                String[] stepRight = gotRight.split(",");
                 for (int i = 0; i < steps.length; i++)
-                    steps[i].setAttempt(Boolean.parseBoolean(values[i]));
+                    steps[i].setAttempt(Boolean.parseBoolean(stepRight[i]) == steps[i].isCorrect());
             } else {
-                card.setAttempt(Boolean.parseBoolean(value));
+                card.setAttempt(Boolean.parseBoolean(gotRight) == card.isCorrect());
             }
         }
     }

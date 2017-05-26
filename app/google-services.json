@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "594390230733",
+    "project_id": "evident-be4cc"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594390230733:android:db83ef655b0cf2d5",
+        "android_client_info": {
+          "package_name": "com.gradians.evident"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594390230733-ssb26m8ec2tf84b0rhbbkfgkcbuulnh4.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "594390230733-feddsi897lsid9248gkqdpqhlbvl783b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gradians.evident",
+            "certificate_hash": "a6486519412652e503dea8a0e2fa4fb6c83a866d"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGDXAdnax7OsZi2eygJj6_LTHaRpYhzbY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
