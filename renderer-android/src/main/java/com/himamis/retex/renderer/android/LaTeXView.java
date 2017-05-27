@@ -72,9 +72,9 @@ public class LaTeXView extends View {
             FactoryProvider.INSTANCE = new FactoryProviderAndroid(getContext());
         }
         Resources resources = getContext().getResources();
-        fontSize = Float.parseFloat(resources.getString(R.string.font_size));
-        lineSpacing = Float.parseFloat(resources.getString(R.string.line_spacing));
-        lineWidth = Float.parseFloat(resources.getString(R.string.line_width));
+        fontSize = resources.getDimension(R.dimen.font_size);
+        lineSpacing = resources.getDimension(R.dimen.line_spacing);
+        lineWidth = resources.getDimension(R.dimen.line_width);
     }
 
     private void readAttributes(Context context, AttributeSet attrs, int defStyleAttr) {

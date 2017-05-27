@@ -34,7 +34,6 @@ public class XMLTeXSourceParser extends TeXSourceParser {
 
     @Override
     public void populate(Question question) {
-        Log.d("EvidentApp", "Populating Question " + question.getId() + " from " + question.getPath());
         cards = new HashMap<>();
         try {
             String newCommands = extractNewCommands();
@@ -108,7 +107,7 @@ public class XMLTeXSourceParser extends TeXSourceParser {
         try {
             fis.close();
         } catch (IOException e) {
-            Log.d("EvidentApp", "Error closing stream " + e.getMessage());
+            Log.e("EvidentApp", "Error closing stream " + e.getMessage());
         }
     }
 

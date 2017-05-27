@@ -48,7 +48,6 @@ public abstract class Asset implements Parcelable {
         File xmlSource = new File(dir, "source.xml");
         if (!texSource.exists() && !xmlSource.exists()) return false;
 
-
         try {
             SourceParser parser;
             if (!texSource.exists() && xmlSource.exists()) {

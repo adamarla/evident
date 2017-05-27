@@ -35,7 +35,6 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populate(Skill skill) {
-        Log.d("EvidentApp", "Populating Skill " + skill.getId() + " from " + skill.getPath());
         this.path = skill.getPath();
         String line;
         try {
@@ -70,7 +69,6 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populate(Snippet snippet) {
-        Log.d("EvidentApp", "Populating Snippet " + snippet.getId() + " from " + snippet.getPath());
         this.path = snippet.getPath();
         String correct = null, incorrect = null, reason, line;
         boolean isCorrect = false;
@@ -100,7 +98,6 @@ public class TeXSourceParser extends SourceParser {
 
     @Override
     public void populate(Question question) {
-        Log.d("EvidentApp", "Populating Question " + question.getId() + " from " + question.getPath());
         this.path = question.getPath();
         try {
             String newCommands = extractNewCommands();

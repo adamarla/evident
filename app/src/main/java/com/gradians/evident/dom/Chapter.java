@@ -58,7 +58,7 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
 
             @Override
             protected void onPostExecute(Boolean done) {
-                Log.d("EvidentApp", "Pulled!");
+                Log.d("EvidentApp", "Chapter loaded!");
                 ((InChapter)context).onLoad();
                 dialog.cancel();
             }

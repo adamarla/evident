@@ -1,6 +1,7 @@
 package com.gradians.evident.ops;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -35,6 +36,9 @@ public class ActivityLog {
         } catch (Exception e) {
             Log.e("EvidentApp", e.getMessage());
         }
+
+        SharedPreferences prefs = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        uid = prefs.getInt("userId", 0);
     }
 
     public void record(Asset asset) {
@@ -70,7 +74,7 @@ public class ActivityLog {
                         params.addProperty("sku_type", assetPath.startsWith("q") ? "Question" : "Snippet");
                         params.addProperty("bits", bits);
                         params.addProperty("date", Integer.parseInt(log.getName()));
-                        params.addProperty("uid", 2);
+                        params.addProperty("uid", uid);
 
                         Ion.with(context)
                                 .load("http://www.gradians.com/activity/update")
@@ -94,6 +98,7 @@ public class ActivityLog {
         }
     }
 
+    private int uid;
     private PrintWriter writer;
     private File todaysLog, logs;
     private Context context;

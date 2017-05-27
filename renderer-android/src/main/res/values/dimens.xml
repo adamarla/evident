@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font_size">14sp</dimen>
+    <dimen name="line_width">340dp</dimen>
+    <dimen name="line_spacing">6dp</dimen>
+</resources>

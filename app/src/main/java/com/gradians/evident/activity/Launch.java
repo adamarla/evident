@@ -54,7 +54,6 @@ public class Launch extends AppCompatActivity implements
         super.onResume();
         SharedPreferences prefs = getSharedPreferences("profile", Context.MODE_PRIVATE);
         int userId = prefs.getInt("userId", 0);
-        Log.d("EvidentApp", "UserId: " + userId);
         if (userId != 0) nextActivity();
     }
 
@@ -106,7 +105,6 @@ public class Launch extends AppCompatActivity implements
                             if (result == null) {
                                 Log.e("EvidentApp", "Error: " + e.getMessage());
                             } else {
-                                Log.d("EvidentApp", "Success: " + result.toString());
                                 int pid = result.get("id").getAsInt();
                                 saveId(pid, firstName);
                                 nextActivity();
