@@ -164,7 +164,7 @@ public class TeXSourceParser extends SourceParser {
         tex = tex.replaceAll("\\\\underline", "\\\\underline\\\\text");
         tex = tex.replaceAll("\\\\newline", "\n");
         tex = tex.replaceAll("\\\\toprule", "\\\\hline");
-        tex = tex.replaceAll("midrule", "hline");
+        tex = tex.replaceAll("\\\\midrule", "\\\\hline");
         tex = tex.replaceAll("\\\\bottomrule", "\\\\hline");
         return super.toPureTeX(tex);
     }

@@ -2,6 +2,8 @@ package com.gradians.evident.ops;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -46,6 +48,7 @@ public class ActivityLog {
     }
 
     public void transmit()  {
+        if (!isConnected()) return;
         HashMap<String, Recorder> recorders = new HashMap<>();
         for (File log: logs.listFiles()) {
             BufferedReader reader;
@@ -107,7 +110,10 @@ public class ActivityLog {
         return new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 
-    private void processEntry(String record) {
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }
