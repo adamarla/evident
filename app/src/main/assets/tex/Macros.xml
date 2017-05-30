@@ -90,6 +90,16 @@
         <Return name="f" />
     </Command>
 
+    <Command name="doublediff" enabled="true">
+        <CreateCommand name="f">
+            <Argument type="String" value="com.gradians.evident.tex.Macros" />
+            <Argument type="String" value="doublediff" />
+            <!-- the command has 0 argument -->
+            <Argument type="float" value="0" />
+        </CreateCommand>
+        <Return name="f" />
+    </Command>
+
     <Command name="prob" enabled="true">
         <CreateCommand name="f">
             <Argument type="String" value="com.gradians.evident.tex.Macros" />

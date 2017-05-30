@@ -69,6 +69,10 @@ public class Macros {
         return new TeXFormula("\\dfrac{dy}{dx}").root;
     }
 
+    public Atom doublediff(TeXParser tp, String[] args) throws ParseException {
+        return new TeXFormula("\\dfrac{d^2 y}{dx^2}").root;
+    }
+
     public Atom ddx(TeXParser tp, String[] args) throws ParseException {
         return new TeXFormula("\\dfrac{d}{dx}").root;
     }
