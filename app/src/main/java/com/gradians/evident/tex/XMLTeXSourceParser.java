@@ -34,9 +34,10 @@ public class XMLTeXSourceParser extends TeXSourceParser {
 
     @Override
     public void populate(Question question) {
+        this.path = question.getPath();
         cards = new HashMap<>();
         try {
-            String newCommands = extractNewCommands();
+            String newCommands = extractNewCommands("\\begin{document}");
 
             int counter = 2;
             while (br.readLine() != null) {
@@ -52,7 +53,7 @@ public class XMLTeXSourceParser extends TeXSourceParser {
             }
             question.steps = parseXmlSource();
         } catch (Exception e) {
-            Log.e("EvidentApp", "Error populating Question " + e.getMessage());
+            Log.e("EvidentApp", "Error populating Question " + question.getPath() + "\n" + e.getMessage());
         }
         closeStreams();
     }

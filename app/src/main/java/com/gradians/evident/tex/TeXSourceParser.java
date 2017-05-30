@@ -73,7 +73,7 @@ public class TeXSourceParser extends SourceParser {
         String correct = null, incorrect = null, reason, line;
         boolean isCorrect = false;
         try {
-            String newCommands = extractNewCommands();
+            String newCommands = extractNewCommands("\\begin{document}");
 
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -100,40 +100,40 @@ public class TeXSourceParser extends SourceParser {
     public void populate(Question question) {
         this.path = question.getPath();
         try {
-            String newCommands = extractNewCommands();
+            String newCommands = extractNewCommands("\\begin{document}");
 
             jumpTo("\\statement");
             String statementTex = newCommands + extractTeX("\\begin{step}");
             question.statement = new Step(statementTex, null, null);
 
             ArrayList<Step> _steps = new ArrayList<>();
-            while (br.readLine() != null) {
+            while (true) {
                 if (jumpTo("\\begin{options}") == null) break;
                 // get both correct and incorrect options, if any
                 String tex = extractTeX("\\end{options}");
 
                 // separate out correct and incorrect options... if any
                 StringBuilder option = new StringBuilder();
-                boolean correctOption = false;
+                boolean correctOptionOnly = false;
                 String correct = null, incorrect = null;
                 for (String s: tex.split("\n")) {
                     if (s.trim().contains("\\correct")) {
-                        correctOption = true;
+                        correctOptionOnly = true;
                     } else if (s.trim().contains("\\incorrect")) {
-                        if (option.length() > 0) {
-                            correct = option.toString();
+                        if (correctOptionOnly) {
+                            correct = newCommands + option.toString();
                             option = new StringBuilder();
                         }
-                        correctOption = false;
+                        correctOptionOnly = false;
                     } else {
-                        option.append(s);
+                        option.append(s).append('\n');
                     }
                 }
                 if (option.length() > 0) {
-                    if (correctOption)
-                        correct = newCommands + option;
+                    if (correctOptionOnly)
+                        correct = newCommands + option.toString();
                     else
-                        incorrect = newCommands + option;
+                        incorrect = newCommands + option.toString();
                 }
 
                 jumpTo("\\reason");
@@ -142,7 +142,7 @@ public class TeXSourceParser extends SourceParser {
             }
             question.steps = _steps.toArray(new Step[_steps.size()]);
         } catch (Exception e) {
-            Log.e("EvidentApp", "Error populating Question " + e.getMessage());
+            Log.e("EvidentApp", "Error populating Question " + question.getPath() + "\n" + e.getMessage());
         }
         closeStreams();
     }
@@ -169,7 +169,7 @@ public class TeXSourceParser extends SourceParser {
         return super.toPureTeX(tex);
     }
 
-    private String path;
+    protected String path;
     protected BufferedReader br;
 
     protected String jumpTo(String locator) throws IOException {
@@ -181,16 +181,15 @@ public class TeXSourceParser extends SourceParser {
         return line;
     }
 
-    protected String extractNewCommands() throws IOException {
+    protected String extractNewCommands(String exitCondition) throws IOException {
         StringBuilder newcommands = new StringBuilder();
         String line;
         while ((line = br.readLine()) != null) {
             line = line.trim();
             if (line.startsWith("\\newcommand")) {
                 newcommands.append(line).append("\n");
-            } else if (line.equals("\\begin{document}")) {
+            } else if (line.startsWith(exitCondition))
                 break;
-            }
         }
         return newcommands.toString();
     }
@@ -208,6 +207,8 @@ public class TeXSourceParser extends SourceParser {
             else if (line.startsWith(exitCommand)) {
                 tex.append("\n%\n"); // end text-mode
                 break;
+            } else if (line.startsWith("\\correct") || line.startsWith("\\incorrect")) {
+                autoLineBreak = false;
             }
 
             Matcher matcher = imagePattern.matcher(line);
