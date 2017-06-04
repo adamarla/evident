@@ -5,10 +5,10 @@
     <string name="select_chapter_title"/>
     <string name="select_chapter_message1">Begin by selecting a chapter</string>
     <string name="in_chapter_title1">Study Notes</string>
-    <string name="in_chapter_message1">Tap on one to expand / collapse it</string>
-    <string name="in_chapter_title2">Single-step Problems</string>
+    <string name="in_chapter_message1">Tap on a Study Note to expand / collapse it</string>
+    <string name="in_chapter_title2">Single-Step Problems</string>
     <string name="in_chapter_message2">Tap on a problem to select it. Then use the ❌ or ✓ to decide if it is correct. Finally, tap again to see its solution.</string>
-    <string name="in_chapter_title3">Multi-step Problems</string>
-    <string name="in_chapter_message3">Tap to reveal first step. For each step, use ❌ or ✓ to decide if it is correct. Tap step to see its solution.</string>
+    <string name="in_chapter_title3">Multi-Step Problems</string>
+    <string name="in_chapter_message3">Tap on a problem to reveal first step. For each step, use ❌ or ✓ to decide if it is correct. Tap on a step again to see its solution.</string>
     <string name="ack_text">GOT IT</string>
 </resources>
