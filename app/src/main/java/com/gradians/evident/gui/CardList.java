@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
@@ -91,8 +92,12 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
 
     @Override
     public void onClick(View view) {
-        selectedView.answer(view.getId() == R.id.btn_is_true);
-        postClickAction();
+        if (selectedView != null) {
+            selectedView.answer(view.getId() == R.id.btn_is_true);
+            postClickAction();
+        } else {
+            Toast.makeText(getContext(), "Please select a step first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void setAdapter(ICard[] cards) {
@@ -100,7 +105,7 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
         list.setAdapter(adapter);
     }
 
-    void enableButtonBar(boolean enable) {
+    private void enableButtonBar(boolean enable) {
         answerButtonBar.enable(enable);
     }
 

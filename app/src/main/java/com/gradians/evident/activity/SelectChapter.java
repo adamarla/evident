@@ -2,6 +2,7 @@ package com.gradians.evident.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gradians.evident.R;
+import com.gradians.evident.gui.HelpOverlay;
 import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
 
-public class SelectChapter extends AppCompatActivity {
+public class SelectChapter extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class SelectChapter extends AppCompatActivity {
 
         // Set onItemClickListener on the list
         final Activity parent = this;
-        ListView list = (ListView)findViewById(R.id.chapter_list);
+        list = (ListView)findViewById(R.id.chapter_list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -43,17 +45,24 @@ public class SelectChapter extends AppCompatActivity {
         new SourceControl(this).sync();
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        new HelpOverlay(list.getChildAt(3), this, R.string.select_chapter_title, R.string.select_chapter_message1).show();
+    }
+
     private ProgressDialog getProgressDialog() {
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setCancelable(false);
         dialog.setProgressNumberFormat(null);
         dialog.setProgressPercentFormat(null);
-        dialog.setTitle("Syncing...");
-        dialog.setMessage("Please wait...");
+        dialog.setTitle("Synchronizing...");
         dialog.setIndeterminate(true);
         dialog.show();
+        dialog.setOnDismissListener(this);
         return dialog;
     }
+
+    private ListView list;
 
 }
