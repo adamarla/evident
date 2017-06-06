@@ -1,9 +1,13 @@
 package com.gradians.evident.gui;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.gradians.evident.R;
 
@@ -28,6 +32,7 @@ public class CardListRelated extends CardList {
         list.setSelectionAfterHeaderView();
 
         openStack();
+        startHelp();
         return view;
     }
 
@@ -66,6 +71,13 @@ public class CardListRelated extends CardList {
             if (!revealNextCard()) break;
             else i++;
         }
+    }
+
+    private void startHelp() {
+        Log.d("EvidentApp", "adapter.getCount() = " + adapter.getCount() + " list.getCount() = " + list.getCount());
+        HelpTarget target = new HelpTarget(list.getAdapter().getView(0, null, list),
+                R.string.do_question_title1, R.string.do_question_message1, R.string.ack_text);
+        new HelpOverlay(target, getActivity()).show();
     }
 
 }

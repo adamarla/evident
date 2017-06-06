@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.gradians.evident.R;
 import com.gradians.evident.gui.HelpOverlay;
+import com.gradians.evident.gui.HelpTarget;
 import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
@@ -47,7 +48,9 @@ public class SelectChapter extends AppCompatActivity implements DialogInterface.
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        new HelpOverlay(list.getChildAt(3), this, R.string.select_chapter_title, R.string.select_chapter_message1).show();
+        HelpTarget target = new HelpTarget(list.getChildAt(5),
+                R.string.select_chapter_title, R.string.select_chapter_message);
+        new HelpOverlay(target, this).show();
     }
 
     private ProgressDialog getProgressDialog() {

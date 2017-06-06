@@ -1,5 +1,6 @@
 package com.gradians.evident.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
@@ -12,7 +13,9 @@ import android.widget.ListView;
 import com.gradians.evident.R;
 import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.dom.Question;
+import com.gradians.evident.gui.AnswerButtonBar;
 import com.gradians.evident.gui.HelpOverlay;
+import com.gradians.evident.gui.HelpTarget;
 import com.gradians.evident.gui.TabsPagerAdapter;
 
 
@@ -28,33 +31,45 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
     }
 
     public void onLoad() {
-        TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
+        tabs = (TabLayout)findViewById(R.id.tabs);
         pager = (ViewPager)findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(chapter, getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabs.setupWithViewPager(pager);
-        tabs.setOnTabSelectedListener(
-                new TabLayout.ViewPagerOnTabSelectedListener(pager) {
-
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        super.onTabSelected(tab);
-                        int textId = 0, titleId = 0;
-                        switch (tab.getPosition()) {
-                            case 1:
-                                textId = R.string.in_chapter_message2;
-                                titleId = R.string.in_chapter_title2;
-                                break;
-                            case 2:
-                                textId = R.string.in_chapter_message3;
-                                titleId = R.string.in_chapter_title3;
-                                break;
-                            default:
-                        }
-                        if (textId != 0) displayOverlay(pager.getChildAt(tab.getPosition()), titleId, textId);
+        final Activity caller = this;
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            @Override
+            public void onPageSelected(int position) { }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    View fragment = pager.getChildAt(pager.getCurrentItem());
+                    ListView items = (ListView)fragment.findViewById(R.id.items);
+                    switch (pager.getCurrentItem()) {
+                        case 0:
+                            HelpTarget target = new HelpTarget(items.getChildAt(1),
+                                    R.string.in_chapter_title2, R.string.in_chapter_message2);
+                            break;
+                        case 1:
+                            HelpTarget target1, target2, target3;
+                            target1 = new HelpTarget(items.getChildAt(1),
+                                    R.string.in_chapter_title3, R.string.in_chapter_message3);
+                            AnswerButtonBar buttonBar = (AnswerButtonBar)fragment.findViewById(R.id.answer_button_bar);
+                            target2 = new HelpTarget(buttonBar,
+                                    R.string.in_chapter_title4, R.string.in_chapter_message4);
+                            target3 = new HelpTarget(items.getChildAt(1),
+                                    R.string.in_chapter_title5, R.string.in_chapter_message5);
+                            new HelpOverlay(new HelpTarget[] { target1, target2, target3 }, caller).show();
+                            break;
+                        default:
+                            new HelpOverlay(new HelpTarget(items.getChildAt(1),
+                                    R.string.in_chapter_title6, R.string.in_chapter_message6), caller).show();
                     }
                 }
-        );
+            }
+        });
     }
 
     @Override
@@ -73,9 +88,12 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        displayOverlay(pager.getChildAt(0), R.string.in_chapter_title1, R.string.in_chapter_message1);
+        HelpTarget target = new HelpTarget(tabs,
+                R.string.in_chapter_title1, R.string.in_chapter_message1);
+        new HelpOverlay(target, this).show();
     }
 
+    private TabLayout tabs;
     private ViewPager pager;
     private Chapter chapter;
 
@@ -92,8 +110,4 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
         return dialog;
     }
 
-    private void displayOverlay(View view, int titleId, int textId) {
-        ListView items = (ListView)view.findViewById(R.id.items);
-        new HelpOverlay(items.getChildAt(1), this, titleId, textId).show();
-    }
 }
