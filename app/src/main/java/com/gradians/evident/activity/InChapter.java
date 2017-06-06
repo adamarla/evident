@@ -48,10 +48,6 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
                     View fragment = pager.getChildAt(pager.getCurrentItem());
                     ListView items = (ListView)fragment.findViewById(R.id.items);
                     switch (pager.getCurrentItem()) {
-                        case 0:
-                            HelpTarget target = new HelpTarget(items.getChildAt(1),
-                                    R.string.in_chapter_title2, R.string.in_chapter_message2);
-                            break;
                         case 1:
                             HelpTarget target1, target2, target3;
                             target1 = new HelpTarget(items.getChildAt(1),
@@ -63,9 +59,10 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
                                     R.string.in_chapter_title5, R.string.in_chapter_message5);
                             new HelpOverlay(new HelpTarget[] { target1, target2, target3 }, caller).show();
                             break;
-                        default:
+                        case 2:
                             new HelpOverlay(new HelpTarget(items.getChildAt(1),
                                     R.string.in_chapter_title6, R.string.in_chapter_message6), caller).show();
+                        default:
                     }
                 }
             }
@@ -88,9 +85,13 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        HelpTarget target = new HelpTarget(tabs,
-                R.string.in_chapter_title1, R.string.in_chapter_message1);
-        new HelpOverlay(target, this).show();
+        HelpTarget target1 = new HelpTarget(tabs,
+                R.string.in_chapter_title1, R.string.in_chapter_message1, R.string.ack_text);
+        View fragment = pager.getChildAt(0);
+        ListView items = (ListView)fragment.findViewById(R.id.items);
+        HelpTarget target2 = new HelpTarget(items.getChildAt(1),
+                R.string.in_chapter_title2, R.string.in_chapter_message2);
+        new HelpOverlay(new HelpTarget[] { target1, target2 }, this).show();
     }
 
     private TabLayout tabs;

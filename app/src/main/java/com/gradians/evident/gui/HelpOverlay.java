@@ -27,7 +27,7 @@ public class HelpOverlay {
 
     private MaterialShowcaseView build(HelpTarget target, Activity activity) {
         this.activity = activity;
-        int delayInMillis = 1000;
+        int fadeDuration = 500;
         String SHOWCASE_ID = target.titleId + "-" + target.textId;
         // single example
         MaterialShowcaseView.Builder builder = new MaterialShowcaseView.Builder(activity)
@@ -37,7 +37,7 @@ public class HelpOverlay {
                 .withRectangleShape()
                 .setShapePadding(-5)
                 .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
-                .setFadeDuration(delayInMillis);
+                .setFadeDuration(fadeDuration);
         if (target.dismissId > 0) {
             builder = builder.setDismissText(target.dismissId);
         } else {
@@ -48,8 +48,7 @@ public class HelpOverlay {
 
     private MaterialShowcaseSequence build(HelpTarget[] targets, Activity activity) {
         ShowcaseConfig config = new ShowcaseConfig();
-        config.setFadeDuration(1000);
-        config.setDelay(1000); // between each showcase view
+        config.setDelay(500); // between each showcase view
         config.setShapePadding(-5);
 
         sequence = new MaterialShowcaseSequence(activity);
