@@ -41,6 +41,9 @@ public class Skill extends Asset implements ICard {
     public void setAttempt(boolean isTrue) { }
 
     @Override
+    public void reset() { }
+
+    @Override
     public boolean getAttempt() {
         return true;
     }

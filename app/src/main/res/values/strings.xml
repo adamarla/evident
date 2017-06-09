@@ -27,4 +27,7 @@
     <string name="do_question_message1">Steps are revealed one-by-one under the problem statement. Select the next step and use ❌ or ✓ to decide if it is correct. As before, tap on a step again to see its solution.</string>
 
     <string name="ack_text">GOT IT</string>
+    <string name="reset_button">Reset</string>
+    <string name="reset_text">Do you wish to reset all the problems in this chapter so you can
+        try them out again?</string>
 </resources>

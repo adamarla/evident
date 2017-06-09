@@ -14,6 +14,8 @@ public interface ICard extends Parcelable {
 
     void setAttempt(boolean isTrue);
 
+    void reset();
+
     boolean getAttempt();
 
     boolean wasAttempted();

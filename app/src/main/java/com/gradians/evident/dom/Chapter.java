@@ -82,6 +82,22 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
         log.transmit();
     }
 
+    public void reset() {
+        ArrayList[] lists = { snippets, questions };
+        for (ArrayList list : lists)
+            for (Object obj : list) {
+                Asset asset = (Asset)obj;
+                ICard card = asset.getCard();
+                if (card.wasAttempted()) {
+                    if (card.hasFurtherSteps()) {
+                        for (Step step: ((Question)asset).getSteps())
+                            step.reset();
+                    }
+                    card.reset();
+                }
+            }
+    }
+
     public Asset[] getAllAssets() {
         ArrayList<Asset> assets = new ArrayList<>();
         assets.addAll(skills);
@@ -160,5 +176,6 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
         parcel.writeInt(id);
         parcel.writeString(name);
     }
+
 }
 

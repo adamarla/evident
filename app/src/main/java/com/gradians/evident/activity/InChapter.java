@@ -5,8 +5,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -28,6 +32,13 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
 
         chapter = getIntent().getParcelableExtra("chapter");
         chapter.load(this, getProgressDialog(chapter.name));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.in_chapter, menu);
+        return true;
     }
 
     public void onLoad() {
@@ -93,6 +104,28 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
                 R.string.in_chapter_title2, R.string.in_chapter_message2);
         new HelpOverlay(new HelpTarget[] { target1, target2 }, this).show();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.reset:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.reset_button).setMessage(R.string.reset_text)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                chapter.reset();
+                                onLoad();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null);
+                builder.show();
+                break;
+        }
+        return true;
+    }
+
 
     private TabLayout tabs;
     private ViewPager pager;

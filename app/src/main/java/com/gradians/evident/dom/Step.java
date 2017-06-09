@@ -40,6 +40,11 @@ public class Step implements ICard {
     }
 
     @Override
+    public void reset() {
+        attempted = false;
+    }
+
+    @Override
     public boolean getAttempt() {
         return attempt;
     }
