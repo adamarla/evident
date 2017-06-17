@@ -124,6 +124,13 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
 
     void postClickAction() {
         enableButtonBar(false);
+        ICard card = selectedView.getCard();
+        int stringId = card.getAttempt() == card.isCorrect() ?
+                R.string.in_chapter_message5_1 : R.string.in_chapter_message5_2;
+        HelpTarget target1 = new HelpTarget(selectedView, R.string.in_chapter_title5, stringId);
+        HelpTarget target2 = new HelpTarget(answerButtonBar,
+                R.string.in_chapter_title6, R.string.in_chapter_message6);
+        new HelpOverlay(new HelpTarget[] { target1, target2 } , getActivity()).show();
     }
 
     private void popUpSkill(int skillId) {

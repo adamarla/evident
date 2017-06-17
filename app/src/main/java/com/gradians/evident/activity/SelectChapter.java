@@ -11,11 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gradians.evident.R;
+import com.gradians.evident.dom.Chapter;
 import com.gradians.evident.gui.HelpOverlay;
 import com.gradians.evident.gui.HelpTarget;
 import com.gradians.evident.ops.SourceControl;
 import com.gradians.evident.gui.ChapterList;
 import com.gradians.evident.gui.ChapterListAdapter;
+
+import java.util.Comparator;
 
 public class SelectChapter extends AppCompatActivity implements DialogInterface.OnDismissListener {
 
@@ -27,7 +30,13 @@ public class SelectChapter extends AppCompatActivity implements DialogInterface.
         // Set the adapter on the list
         final ChapterList chapterList = new ChapterList();
         chapterList.loadCatalog("chapters", getAssets());
-        ChapterListAdapter adapter = new ChapterListAdapter(this, chapterList.getChapters());
+        final ChapterListAdapter adapter = new ChapterListAdapter(this, chapterList.getChapters());
+        adapter.sort(new Comparator<Chapter>() {
+            @Override
+            public int compare(Chapter c1, Chapter c2) {
+                return c1.name.compareTo(c2.name);
+            }
+        });
 
         // Set onItemClickListener on the list
         final Activity parent = this;
@@ -37,7 +46,7 @@ public class SelectChapter extends AppCompatActivity implements DialogInterface.
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(parent, InChapter.class);
-                intent.putExtra("chapter", chapterList.getChapters()[i]);
+                intent.putExtra("chapter", adapter.getItem(i));
                 parent.startActivity(intent);
             }
         });
@@ -48,7 +57,7 @@ public class SelectChapter extends AppCompatActivity implements DialogInterface.
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        HelpTarget target = new HelpTarget(list.getChildAt(5),
+        HelpTarget target = new HelpTarget(list.getChildAt(0),
                 R.string.select_chapter_title, R.string.select_chapter_message);
         new HelpOverlay(target, this).show();
     }

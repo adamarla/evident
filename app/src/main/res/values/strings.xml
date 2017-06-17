@@ -3,28 +3,33 @@
     <string name="linode">http://109.74.201.62:80/</string>
 
     <string name="select_chapter_title">Welcome!</string>
-    <string name="select_chapter_message">Please select a chapter from the list to begin\u2026</string>
+    <string name="select_chapter_message">To begin, tap on the chapter highlighted \u2026</string>
 
-    <string name="in_chapter_title1">Sections</string>
-    <string name="in_chapter_message1">The app has three sections. Visit each section to see how it works.</string>
+    <string name="in_chapter_title1"/>
+    <string name="in_chapter_message1">This tab is pretty basic, it lists study notes. Visit the other tabs to see how they work.</string>
 
-    <string name="in_chapter_title2">Study Notes</string>
-    <string name="in_chapter_message2">This section is for review only. Tap on a Study Note to toggle it.</string>
+    <string name="in_chapter_title2">Theory</string>
+    <string name="in_chapter_message2">Tap to see a short study note.</string>
 
     <string name="in_chapter_title3">Single-Step Problems</string>
-    <string name="in_chapter_message3">This section is for basic practise. Tap on a problem to select it..</string>
+    <string name="in_chapter_message3">Select the highlighted statement by tapping on it.</string>
 
     <string name="in_chapter_title4"/>
-    <string name="in_chapter_message4">..now use the buttons to decide if the selected problem statement is correct.</string>
+    <string name="in_chapter_message4">Now use ❌ or ✓ to decide if the selected statement is correct.</string>
 
     <string name="in_chapter_title5"/>
-    <string name="in_chapter_message5">Finally, tap on the problem statement again to see its solution.</string>
+    <string name="in_chapter_message5">Tap on the problem again to see our solution.</string>
+    <string name="in_chapter_message5_1">You guessed right, good job! Now tap the problem again to see our solution.</string>
+    <string name="in_chapter_message5_2">You guessed wrong, but no worries. You get the idea. Now tap the problem again to see our explanation.</string>
 
-    <string name="in_chapter_title6">Multi-Step Problems</string>
-    <string name="in_chapter_message6">This section is for advanced practise. Go ahead and tap on a problem to expand it.</string>
+    <string name="in_chapter_title6"/>
+    <string name="in_chapter_message6">Click on the \'book\' button in the center to see the underlying theory.</string>
+
+    <string name="in_chapter_title7">Multi-Step Problems</string>
+    <string name="in_chapter_message7">Tap the highlighted problem to expand it.</string>
 
     <string name="do_question_title1"/>
-    <string name="do_question_message1">Steps are revealed one-by-one under the problem statement. Select the next step and use ❌ or ✓ to decide if it is correct. As before, tap on a step again to see its solution.</string>
+    <string name="do_question_message1">Steps are revealed below the problem statement. Select the next step and use ❌ or ✓ to decide if it is correct.</string>
 
     <string name="ack_text">GOT IT</string>
     <string name="reset_button">Reset</string>

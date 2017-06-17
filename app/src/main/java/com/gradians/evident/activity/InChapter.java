@@ -60,19 +60,17 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
                     ListView items = (ListView)fragment.findViewById(R.id.items);
                     switch (pager.getCurrentItem()) {
                         case 1:
-                            HelpTarget target1, target2, target3;
+                            HelpTarget target1, target2;
                             target1 = new HelpTarget(items.getChildAt(1),
                                     R.string.in_chapter_title3, R.string.in_chapter_message3);
                             AnswerButtonBar buttonBar = (AnswerButtonBar)fragment.findViewById(R.id.answer_button_bar);
                             target2 = new HelpTarget(buttonBar,
                                     R.string.in_chapter_title4, R.string.in_chapter_message4);
-                            target3 = new HelpTarget(items.getChildAt(1),
-                                    R.string.in_chapter_title5, R.string.in_chapter_message5);
-                            new HelpOverlay(new HelpTarget[] { target1, target2, target3 }, caller).show();
+                            new HelpOverlay(new HelpTarget[] { target1, target2 }, caller).show();
                             break;
                         case 2:
-                            new HelpOverlay(new HelpTarget(items.getChildAt(1),
-                                    R.string.in_chapter_title6, R.string.in_chapter_message6), caller).show();
+                            new HelpOverlay(new HelpTarget(items.getChildAt(2),
+                                    R.string.in_chapter_title7, R.string.in_chapter_message7), caller).show();
                         default:
                     }
                 }
@@ -96,13 +94,8 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        HelpTarget target1 = new HelpTarget(tabs,
-                R.string.in_chapter_title1, R.string.in_chapter_message1, R.string.ack_text);
-        View fragment = pager.getChildAt(0);
-        ListView items = (ListView)fragment.findViewById(R.id.items);
-        HelpTarget target2 = new HelpTarget(items.getChildAt(1),
-                R.string.in_chapter_title2, R.string.in_chapter_message2);
-        new HelpOverlay(new HelpTarget[] { target1, target2 }, this).show();
+        HelpTarget target = new HelpTarget(tabs, R.string.in_chapter_title1, R.string.in_chapter_message1, R.string.ack_text);
+        new HelpOverlay(target, this).show();
     }
 
     @Override
@@ -125,7 +118,6 @@ public class InChapter extends AppCompatActivity implements DialogInterface.OnDi
         }
         return true;
     }
-
 
     private TabLayout tabs;
     private ViewPager pager;

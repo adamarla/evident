@@ -162,6 +162,11 @@ public class LaTeXView extends View {
         invalidate();
     }
 
+    public void setLineWidth(int lineWidth) {
+        this.lineWidth = lineWidth;
+        invalidate();
+    }
+
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         float newSizeScale = mScreenDensity * newConfig.fontScale;
