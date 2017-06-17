@@ -1,5 +1,7 @@
 package com.gradians.evident.gui;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -15,6 +18,9 @@ import com.gradians.evident.R;
 import com.gradians.evident.activity.DoQuestion;
 import com.gradians.evident.activity.InChapter;
 import com.gradians.evident.dom.Question;
+import com.gradians.evident.dom.Skill;
+import com.gradians.evident.dom.Step;
+import com.himamis.retex.renderer.android.LaTeXView;
 
 /**
  * Created by adamarla on 3/26/17.
@@ -51,7 +57,8 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
                 list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                 list.setSelector(R.drawable.bg_selected_card);
                 list.setDrawSelectorOnTop(true);
-                answerButtonBar.enable(false);
+                answerButtonBar.enable(false); // this action enables reference button
+                answerButtonBar.enableReferenceButton(false); // to disable it initially
             } else {
                 answerButtonBar.setVisibility(View.GONE);
             }
@@ -93,8 +100,14 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
     @Override
     public void onClick(View view) {
         if (selectedView != null) {
-            selectedView.answer(view.getId() == R.id.btn_is_true);
-            postClickAction();
+            if (view.getId() == R.id.btn_see_skill) {
+                int skillId = ((Step) selectedView.getCard()).skillId;
+                if (skillId > 0) popUpSkill(skillId);
+                else Toast.makeText(getContext(), "No text reference", Toast.LENGTH_SHORT).show();
+            } else {
+                selectedView.answer(view.getId() == R.id.btn_is_true);
+                postClickAction();
+            }
         } else {
             Toast.makeText(getContext(), "Please select a step first", Toast.LENGTH_SHORT).show();
         }
@@ -111,6 +124,31 @@ public class CardList extends Fragment implements AdapterView.OnItemClickListene
 
     void postClickAction() {
         enableButtonBar(false);
+    }
+
+    private void popUpSkill(int skillId) {
+        Context context = getContext();
+        Skill skill = new Skill(skillId, "skills/" + skillId);
+        skill.load(context);
+        Dialog dialog = new Dialog(getContext());
+
+        LaTeXView front = new LaTeXView(context);
+        front.setLatexText(skill.getFront());
+        front.setLineWidth((int)getResources().getDimension(R.dimen.line_width_dialog));
+        LaTeXView rear = new LaTeXView(context);
+        rear.setBackgroundResource(R.drawable.bg_reference_text);
+        rear.setLineWidth((int)getResources().getDimension(R.dimen.line_width_dialog));
+        rear.setLatexText(skill.getBack());
+
+        LinearLayout container = new LinearLayout(getContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.addView(front);
+        container.addView(rear);
+
+        dialog.setContentView(container);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setTitle("Underlying Concept");
+        dialog.show();
     }
 
     ICard[] cards;

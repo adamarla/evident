@@ -24,5 +24,6 @@
     <dimen name="corner_width">22dp</dimen>
     <dimen name="corner_height">32dp</dimen>
 
+    <dimen name="line_width_dialog">320dp</dimen>
 
 </resources>

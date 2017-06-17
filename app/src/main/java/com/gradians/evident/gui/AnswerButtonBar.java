@@ -28,12 +28,18 @@ public class AnswerButtonBar extends LinearLayout {
             btn.setEnabled(enable);
             btn.setAlpha(enable ? 1.0f : 0.5f);
         }
+        enableReferenceButton(!enable);
+    }
+
+    public void enableReferenceButton(boolean enable) {
+        FloatingActionButton btn = (FloatingActionButton)findViewById(R.id.btn_see_skill);
+        btn.setEnabled(enable);
+        btn.setAlpha(enable ? 1.0f : 0.5f);
     }
 
     @Override
     public void setOnClickListener(OnClickListener listener) {
-        super.setOnClickListener(listener);
-        int ids[] = { R.id.btn_is_false, R.id.btn_is_true };
+        int ids[] = { R.id.btn_is_false, R.id.btn_is_true, R.id.btn_see_skill };
         for (int j: ids) {
             FloatingActionButton btn = (FloatingActionButton)findViewById(j);
             btn.setOnClickListener(listener);

@@ -35,6 +35,7 @@ public class Chapter implements Comparable<Chapter>, Parcelable {
         AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+                Asset.skillMap = SkillMap.getInstance(context);
                 Recorder recorder = new Recorder(context, id);
                 ArrayList[] lists = { skills, snippets, questions };
                 for (ArrayList list : lists) {

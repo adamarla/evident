@@ -19,7 +19,9 @@ import java.io.File;
 
 public abstract class Asset implements Parcelable {
 
-    public Asset(int id, String path) {
+    public static SkillMap skillMap;
+
+    Asset(int id, String path) {
         this.id = id;
         this.path = path;
     }
@@ -36,13 +38,13 @@ public abstract class Asset implements Parcelable {
         return chapterId;
     }
 
-    public void setChapterId(int chapterId) {
+    void setChapterId(int chapterId) {
         this.chapterId = chapterId;
     }
 
     public abstract ICard getCard();
 
-    boolean load(Context context) {
+    public boolean load(Context context) {
         File dir = new File(context.getExternalFilesDir(null), "vault/" + path);
         File texSource = new File(dir, "source.tex");
         File xmlSource = new File(dir, "source.xml");
@@ -54,6 +56,7 @@ public abstract class Asset implements Parcelable {
                 parser = new XMLSourceParser(xmlSource);
             } else if (texSource.exists() && !xmlSource.exists()) {
                 parser = new TeXSourceParser(texSource);
+                ((TeXSourceParser)parser).setSkillMap(Asset.skillMap);
             } else {
                 parser = new XMLTeXSourceParser(texSource, xmlSource);
             }

@@ -69,6 +69,7 @@ public class Step implements ICard {
         return hasSteps;
     }
 
+    public int skillId;
     private String correct, incorrect, reason;
     private boolean faceShownIsCorrect, attempted, attempt, hasSteps, answerable;
 
@@ -87,6 +88,7 @@ public class Step implements ICard {
         parcel.writeInt(attempt ? 1 : 0);
         parcel.writeInt(hasSteps ? 1 : 0);
         parcel.writeInt(answerable ? 1: 0);
+        parcel.writeInt(skillId);
     }
 
     public static Creator<Step> CREATOR = new Creator<Step>() {
@@ -110,6 +112,7 @@ public class Step implements ICard {
         attempt = in.readInt() == 1;
         hasSteps = in.readInt() == 1;
         answerable = in.readInt() == 1;
+        skillId = in.readInt();
     }
 
 }

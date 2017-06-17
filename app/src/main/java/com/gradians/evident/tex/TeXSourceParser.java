@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.gradians.evident.dom.Question;
 import com.gradians.evident.dom.Skill;
+import com.gradians.evident.dom.SkillMap;
 import com.gradians.evident.dom.Snippet;
 import com.gradians.evident.dom.Step;
 
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -31,6 +31,10 @@ public class TeXSourceParser extends SourceParser {
         } catch (FileNotFoundException e) {
             Log.e("EvidentApp", "TeXSourceParser Error");
         }
+    }
+
+    public void setSkillMap(SkillMap skillMap) {
+        this.skillMap = skillMap;
     }
 
     @Override
@@ -89,6 +93,9 @@ public class TeXSourceParser extends SourceParser {
 
             reason = newCommands + extractTeX("\\end{snippet}");
             snippet.step = new Step(correct, incorrect, reason);
+            int[] id = skillMap.getSkillId(snippet.getPath());
+            if (id != null)
+                snippet.step.skillId = id[0];
         } catch (Exception e) {
             Log.d("EvidentApp", snippet.step.toString());
             Log.e("EvidentApp", "Error populating Snippet " + e.getMessage());
@@ -141,6 +148,10 @@ public class TeXSourceParser extends SourceParser {
                 _steps.add(new Step(correct, incorrect, reason));
             }
             question.steps = _steps.toArray(new Step[_steps.size()]);
+            int[] ids = skillMap.getSkillId(question.getPath());
+            if (ids != null)
+                for (int i = 0; i < question.steps.length; i++)
+                    question.steps[i].skillId = ids[i];
         } catch (Exception e) {
             Log.e("EvidentApp", "Error populating Question " + question.getPath() + "\n" + e.getMessage());
         }
@@ -169,10 +180,11 @@ public class TeXSourceParser extends SourceParser {
         return super.toPureTeX(tex);
     }
 
+    private SkillMap skillMap;
     protected String path;
-    protected BufferedReader br;
+    BufferedReader br;
 
-    protected String jumpTo(String locator) throws IOException {
+    private String jumpTo(String locator) throws IOException {
         String line;
         while ((line = br.readLine()) != null) {
             if (line.trim().startsWith(locator))
@@ -181,7 +193,7 @@ public class TeXSourceParser extends SourceParser {
         return line;
     }
 
-    protected String extractNewCommands(String exitCondition) throws IOException {
+    String extractNewCommands(String exitCondition) throws IOException {
         StringBuilder newcommands = new StringBuilder();
         String line;
         while ((line = br.readLine()) != null) {
@@ -194,7 +206,7 @@ public class TeXSourceParser extends SourceParser {
         return newcommands.toString();
     }
 
-    protected String extractTeX(String exitCommand) throws IOException {
+    String extractTeX(String exitCommand) throws IOException {
         StringBuilder tex = new StringBuilder();
         String line;
         Pattern imagePattern = Pattern.compile("includegraphics\\[scale=(.*)\\]\\{(.*)\\}");

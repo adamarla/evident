@@ -79,8 +79,11 @@ public class XMLSourceParser extends SourceParser {
                         } else {
                             reason = toPureTeX(text);
                             snippet.step = new Step(correct, incorrect, reason);
-                            break;
                         }
+                    } else if (node.equals("skill")) {
+                        String skillId = parser.getAttributeValue(null, "id");
+                        snippet.step.skillId = Integer.parseInt(skillId);
+                        break;
                     }
                 }
                 parser.next() ;
@@ -128,6 +131,12 @@ public class XMLSourceParser extends SourceParser {
                         reason = toPureTeX(text);
                         _steps.add(new Step(correct, incorrect, reason));
                         outStep = false;
+                    }
+                } else if (name.equals("skill")) {
+                    Step currentStep = _steps.get(_steps.size()-1);
+                    if (currentStep.skillId == 0) {
+                        String skillId = parser.getAttributeValue(null, "id");
+                        currentStep.skillId = Integer.parseInt(skillId);
                     }
                 }
                 parser.next();

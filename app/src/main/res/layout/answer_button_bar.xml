@@ -28,6 +28,20 @@
         android:layout_weight="1" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_see_skill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_ref_text"
+        android:onClick="onButtonClick"
+        app:backgroundTint="@color/dark_grey"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_is_true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
